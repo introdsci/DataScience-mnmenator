@@ -1,0 +1,16 @@
+---
+title: "Discovery and Data Preparation"
+author: "Michael Messmer"
+output:
+  html_document:
+    df_print: paged
+---
+
+First, we need to install the tidyverse library so we can import and manipulate our data.
+
+```{r}
+suppressMessages(install.packages("tidyverse", repos = "http://cran.us.r-project.org"))
+suppressMessages(library("tidyverse"))
+
+data <- read_csv("https://raw.githubusercontent.com/datasets/atp-world-tour-tennis-data/master/csv/2_match_scores/match_scores_2017_UNINDEXED.csv")
+```
