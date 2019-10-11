@@ -68,7 +68,7 @@ match$loser_seed[match$loser_seed == "7 WC"] <- "7"
 match$loser_seed[match$loser_seed == "8 WC"] <- "8"
 ```
 
-The distinction rest of the non-numeric seeds are also not relevant to our analysis, and can all be treated as equivalent and less than any numeric seed. For now, we'll give them an arbitrary numeric value that is greater than any numeric seed.
+The distinction rest of the non-numeric seeds are also not relevant to our analysis, and can all be treated as equivalent and less than any numeric seed. For now, we'll give them an arbitrary numeric value that is greater than any numeric seed. It is important to note that the lower the numeric value is, the higher the seed is. For example, a 3 seeded player is expected to beat a 7 seeded player. So although the numeric value we are assigning is greater than the official seeds, this actually means that they will be treated as a lower seed, which means they would be expected to lose to an officially seeded player.
 
 ```{r}
 match$winner_seed[match$winner_seed == "AL"] <- "50"
@@ -89,8 +89,16 @@ levels(as.factor(match$winner_seed))
 levels(as.factor(match$loser_seed))
 ```
 
-It is important to note that the lower the numeric value is, the higher the seed is. For example, a 3 seeded player is expected to beat a 7 seeded player. So although the numeric value we just assigned is greater than the official seeds, this actually means that they will be treated as a lower seed, which means they would be expected to lose to an officially seeded player.
+This looks much better. Now that all of our seeds are numeric, let's make sure they're encoded as such so we can properly compare them.
 
-Next we should address the NA problem. We have no way of comparing nonseeded players directly to each other, so for the sake of this analysis, let's just give them an arbitrary number that will show that they are lower than officially seeded players.
+```{r}
+match$winner_seed <- as.numeric(match$winner_seed)
+match$loser_seed <- as.numeric(match$loser_seed)
+
+typeof(match$winner_seed)
+typeof(match$loser_seed)
+```
+
+Next we should address the NA problem. We have no way of comparing nonseeded players directly to each other, so for the sake of this analysis, we will assign them the same number that our non-numeric seeds were given.
 
 In fact, since we can't obtain any useful insight from matches between two unseeded players, let's just remove these matches from our table entirely.
