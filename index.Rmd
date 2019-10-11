@@ -1,5 +1,5 @@
 ---
-title: "Are Tennis Seeds Accurate?" #replace the title with something short and catchy to represent your project
+title: "Are Tennis Seeds Accurate?"
 subtitle: "Michael Messmer's Data Science Portfolio"
 output:
   html_document:
@@ -8,9 +8,7 @@ output:
 
 ## Abstract
 
-In under 250 words give a brief summary of the project so far.
-
-In tennis, "seeding" is the act of ensuring that the players who are most likely to win a tournament will not face each other early on. A player's seed is determined by their ranking as well as their recent performance. In an algorithmically ideal world, a higher seeded player should always beat a lower seeded player. This is obviously not the case in the real world, as the seeding system cannot not account for all variables, like favorable matchups or whether or not a player is having a bad day. But just how accurate is the seeding system?
+In tennis, "seeding" is the act of ensuring that the players who are most likely to win a tournament will not face each other early on. A player's seed is determined by their ranking as well as their recent performance. In an algorithmically ideal world, a higher seeded player should always beat a lower seeded player. This is obviously not the case in the real world, as the seeding system cannot not account for all variables, like favorable matchups or whether or not a player is having a bad day. But just how accurate is the seeding system? That is what this project will attempt to find out.
 
 ### 1. Discovery and Data Preparation
 

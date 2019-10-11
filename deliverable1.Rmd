@@ -14,3 +14,83 @@ suppressMessages(library("tidyverse"))
 
 data <- read_csv("https://raw.githubusercontent.com/datasets/atp-world-tour-tennis-data/master/csv/2_match_scores/match_scores_2017_UNINDEXED.csv")
 ```
+
+Let's take a look at the column names and make sure they're all suitable.
+
+```{r}
+colnames(data)
+```
+
+These names look quite good. They have consistent syntax, they're all unambiguous, and they all accurately describe what they represent. Renaiming does not seem necessary.
+
+That being said, much of this data is irrelevant for our studies. For example, tourney_order has nothing to do with seeding, and we probably don't need both player names and player ids. Let's load some libraries for tidying the data.
+
+```{r}
+suppressMessages(library("dplyr"))
+suppressMessages(library("tidyr"))
+```
+
+Each entry in the data neatly describes a single match, which is great. But because there is a lot of data that we don't care about, we will create a match table that contains only the relevant columns.
+
+```{r}
+match <- tibble("tourney_slug"=data$tourney_slug, "tourney_round_name"=data$tourney_round_name, "winner_name"=data$winner_name, "loser_name"=data$loser_name, "winner_seed"=data$winner_seed, "loser_seed"=data$loser_seed)
+head(match)
+```
+
+That looks much better. One thing to notice is that our seeds have been encoded as characters rather than as integers. Looking at the loser_seed of the last 2 rows gives us some insight as to why, as well as showing a few other issues. Players that aren't seeded are given a value of NA, which can't be directly compared with our numerical seeds. There is also another seed that isn't a numeric value, WC. Let's take a closer look at our seed values.
+
+```{r}
+levels(as.factor(match$winner_seed))
+levels(as.factor(match$loser_seed))
+```
+
+We can see that some seeds are indeed character values, such as WC and AL. WC is what's known as a wild card in tennis. The distinction between a seeded player with or without a wild card is not relevant to our analysis, so we will treat them as equivalent.
+
+```{r}
+match$winner_seed[match$winner_seed == "1 WC"] <- "1"
+match$winner_seed[match$winner_seed == "1 AL"] <- "1"
+match$winner_seed[match$winner_seed == "14 WC"] <- "14"
+match$winner_seed[match$winner_seed == "2 WC"] <- "2"
+match$winner_seed[match$winner_seed == "3 WC"] <- "3"
+match$winner_seed[match$winner_seed == "4 WC"] <- "4"
+match$winner_seed[match$winner_seed == "5 WC"] <- "5"
+match$winner_seed[match$winner_seed == "6 WC"] <- "6"
+match$winner_seed[match$winner_seed == "7 WC"] <- "7"
+match$winner_seed[match$winner_seed == "8 WC"] <- "8"
+match$loser_seed[match$loser_seed == "1 WC"] <- "1"
+match$loser_seed[match$loser_seed == "14 WC"] <- "14"
+match$loser_seed[match$loser_seed == "2 WC"] <- "2"
+match$loser_seed[match$loser_seed == "3 WC"] <- "3"
+match$loser_seed[match$loser_seed == "4 WC"] <- "4"
+match$loser_seed[match$loser_seed == "5 WC"] <- "5"
+match$loser_seed[match$loser_seed == "6 WC"] <- "6"
+match$loser_seed[match$loser_seed == "7 WC"] <- "7"
+match$loser_seed[match$loser_seed == "8 WC"] <- "8"
+```
+
+The distinction rest of the non-numeric seeds are also not relevant to our analysis, and can all be treated as equivalent and less than any numeric seed. For now, we'll give them an arbitrary numeric value that is greater than any numeric seed.
+
+```{r}
+match$winner_seed[match$winner_seed == "AL"] <- "50"
+match$winner_seed[match$winner_seed == "LL"] <- "50"
+match$winner_seed[match$winner_seed == "PR"] <- "50"
+match$winner_seed[match$winner_seed == "Q"] <- "50"
+match$winner_seed[match$winner_seed == "S"] <- "50"
+match$winner_seed[match$winner_seed == "WC"] <- "50"
+match$loser_seed[match$loser_seed == "AL"] <- "50"
+match$loser_seed[match$loser_seed == "Alt"] <- "50"
+match$loser_seed[match$loser_seed == "LL"] <- "50"
+match$loser_seed[match$loser_seed == "PR"] <- "50"
+match$loser_seed[match$loser_seed == "Q"] <- "50"
+match$loser_seed[match$loser_seed == "S"] <- "50"
+match$loser_seed[match$loser_seed == "WC"] <- "50"
+
+levels(as.factor(match$winner_seed))
+levels(as.factor(match$loser_seed))
+```
+
+It is important to note that the lower the numeric value is, the higher the seed is. For example, a 3 seeded player is expected to beat a 7 seeded player. So although the numeric value we just assigned is greater than the official seeds, this actually means that they will be treated as a lower seed, which means they would be expected to lose to an officially seeded player.
+
+Next we should address the NA problem. We have no way of comparing nonseeded players directly to each other, so for the sake of this analysis, let's just give them an arbitrary number that will show that they are lower than officially seeded players.
+
+In fact, since we can't obtain any useful insight from matches between two unseeded players, let's just remove these matches from our table entirely.
