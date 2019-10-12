@@ -10,6 +10,11 @@ output:
 
 In tennis, "seeding" is the act of ensuring that the players who are most likely to win a tournament will not face each other early on. A player's seed is determined by their ranking as well as their recent performance. In an algorithmically ideal world, a higher seeded player should always beat a lower seeded player. This is obviously not the case in the real world, as the seeding system cannot not account for all variables, like favorable matchups or whether or not a player is having a bad day. But just how accurate is the seeding system? That is what this project will attempt to find out.
 
+It is important to note that the lower the numeric value of the seed is, the higher the seed is. For example, a 3 seeded player is expected to beat a 7 seeded player. So although the numeric value we are assigning is greater than the official seeds, this actually means that they will be treated as a lower seed, which means they would be expected to lose to an officially seeded player. The semantics of the analysis and the way that seeds are referred to will follow these 2 rules:
+
+1. The higher seeded player is expected to beat the lower seeded player.
+2. The player with a smaller numerical seed is expected to beat the player with the greater numerical seed.
+
 ### 1. Discovery and Data Preparation
 
 Provide a one-sentence introduction with what is covered by the first deliverable along with a link to another html page that gives the details.

@@ -109,22 +109,22 @@ match$loser_seed[match$loser_seed == "7 WC"] <- "7"
 match$loser_seed[match$loser_seed == "8 WC"] <- "8"
 ```
 
-The distinction rest of the non-numeric seeds are also not relevant to our analysis, and can all be treated as equivalent and less than any numeric seed. For now, we'll give them an arbitrary numeric value that is greater than any numeric seed. It is important to note that the lower the numeric value is, the higher the seed is. For example, a 3 seeded player is expected to beat a 7 seeded player. So although the numeric value we are assigning is greater than the official seeds, this actually means that they will be treated as a lower seed, which means they would be expected to lose to an officially seeded player.
+The distinction rest of the non-numeric seeds are also not relevant to our analysis, and can all be treated as equivalent and less than any numeric seed. For now, we'll give them a numeric value that is greater than any numeric seed, to indicate that they are expected to lose to normal seeds.
 
 ```{r}
-match$winner_seed[match$winner_seed == "AL"] <- "50"
-match$winner_seed[match$winner_seed == "LL"] <- "50"
-match$winner_seed[match$winner_seed == "PR"] <- "50"
-match$winner_seed[match$winner_seed == "Q"] <- "50"
-match$winner_seed[match$winner_seed == "S"] <- "50"
-match$winner_seed[match$winner_seed == "WC"] <- "50"
-match$loser_seed[match$loser_seed == "AL"] <- "50"
-match$loser_seed[match$loser_seed == "Alt"] <- "50"
-match$loser_seed[match$loser_seed == "LL"] <- "50"
-match$loser_seed[match$loser_seed == "PR"] <- "50"
-match$loser_seed[match$loser_seed == "Q"] <- "50"
-match$loser_seed[match$loser_seed == "S"] <- "50"
-match$loser_seed[match$loser_seed == "WC"] <- "50"
+match$winner_seed[match$winner_seed == "AL"] <- "34"
+match$winner_seed[match$winner_seed == "LL"] <- "34"
+match$winner_seed[match$winner_seed == "PR"] <- "34"
+match$winner_seed[match$winner_seed == "Q"] <- "34"
+match$winner_seed[match$winner_seed == "S"] <- "34"
+match$winner_seed[match$winner_seed == "WC"] <- "34"
+match$loser_seed[match$loser_seed == "AL"] <- "34"
+match$loser_seed[match$loser_seed == "Alt"] <- "34"
+match$loser_seed[match$loser_seed == "LL"] <- "34"
+match$loser_seed[match$loser_seed == "PR"] <- "34"
+match$loser_seed[match$loser_seed == "Q"] <- "34"
+match$loser_seed[match$loser_seed == "S"] <- "34"
+match$loser_seed[match$loser_seed == "WC"] <- "34"
 
 levels(as.factor(match$winner_seed))
 levels(as.factor(match$loser_seed))
@@ -150,20 +150,44 @@ typeof(match$loser_seed)
 Next we should address the NA problem. We have no way of comparing nonseeded players directly to each other, so for the sake of this analysis, we will assign them the same number that our non-numeric seeds were given, to indicate that they are expected to lose to any seeded player.
 
 ```{r}
-match$winner_seed[is.na(match$winner_seed)] <- 50
-match$loser_seed[is.na(match$loser_seed)] <- 50
+match$winner_seed[is.na(match$winner_seed)] <- 34
+match$loser_seed[is.na(match$loser_seed)] <- 34
 ```
 
 In fact, since we can't obtain any useful insight from matches between two unseeded players, let's just remove these matches from our table entirely.
 
 ```{r}
-match <- filter(match, (winner_seed != 50 | loser_seed != 50))
+match <- filter(match, (winner_seed != 34 | loser_seed != 34))
 ```
 
 Now we are just left with matches between 2 players of different seed levels. Let's make some visualizations to see what the data tells us.
 
 ##Visualization
 
-```{r}
+Let's first make a plot to show which seeds win the most matches. Ideally, the highest seeds should be winning the most matches.
 
+```{r}
+suppressMessages(library(ggplot2))
+
+ggplot(match, aes(winner_seed)) + geom_histogram(bins=34)
 ```
+
+Our plot indicates that most matches are won by unseeded players, which initially seems to be the opposite of what we predicted. However, it is important to note that the majority of players of any tournament are unseeded. Because of their sheer advantage in numbers, it makes sense that they would be winning the majority of matches. Let's see how the graph looks if unseeded players are not considered.
+
+```{r}
+ggplot(filter(match, winner_seed!=34), aes(winner_seed)) + geom_histogram(bins=33)
+```
+
+This graph seems to generally support our hypothesis. As the seed number increases, the amount of wins decreases. Two interesting things to note are that seed 4 has the greatest number of wins, and that there is a distinct drop in wins after seed 8. The latter can be explained by the fact that not all tennis tournaments have the same number of seeds. The majority of tournaments have 8 seeded players, while some larger tournaments have 32 seeds. The former does not seem to have a clear explanation, but could possibly be attributed to random chance.
+
+The main assumption of the seeding system is that players with a lower seed should lose to players with a higher seed. Let's graph that and see what it shows.
+
+```{r}
+ggplot(match, aes(winner_seed<loser_seed)) + geom_bar() + labs(x="Higher Seed Beat Lower Seed", y="Number of Matches")
+```
+
+This graph indicates that the higher seeded player wins about 2/3 of the time. This is a comfortable majority, and indicates that the seeding system generally does a good job at predicting the outcome of matches.
+
+##Next Steps
+
+For now, we can say that the seeding system is generally accurate. As far as other questions we might be able to answer, one area I particularly want to explore is the match scores. In tennis the value of a set is the same whether the score was 6-0 or 7-6, so I would interested in seeing the difference in games won by the winning player compared to games won by the losing player. That might indicate whether or not giving up a set once you go behind in order to save energy for later sets is a reasonable strategy.
