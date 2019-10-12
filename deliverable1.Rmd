@@ -47,8 +47,8 @@ levels(as.factor(match$loser_seed))
 We can see that some seeds are indeed character values, such as WC and AL. WC is what's known as a wild card in tennis. The distinction between a seeded player with or without a wild card is not relevant to our analysis, so we will treat them as equivalent.
 
 ```{r}
-match$winner_seed[match$winner_seed == "1 WC"] <- "1"
 match$winner_seed[match$winner_seed == "1 AL"] <- "1"
+match$winner_seed[match$winner_seed == "1 WC"] <- "1"
 match$winner_seed[match$winner_seed == "14 WC"] <- "14"
 match$winner_seed[match$winner_seed == "2 WC"] <- "2"
 match$winner_seed[match$winner_seed == "3 WC"] <- "3"
@@ -89,7 +89,14 @@ levels(as.factor(match$winner_seed))
 levels(as.factor(match$loser_seed))
 ```
 
-This looks much better. Now that all of our seeds are numeric, let's make sure they're encoded as such so we can properly compare them.
+This looks much better, all of our seeds are numeric now. However, they are still encoded as characters, which means they cannot be properly compared in some cases.
+
+```{r}
+18 < 2
+"18" < "2"
+```
+
+In order to ensure that we can properly compare seeds, we must make sure they are encoded as numbers rather than characters.
 
 ```{r}
 match$winner_seed <- as.numeric(match$winner_seed)
@@ -99,6 +106,15 @@ typeof(match$winner_seed)
 typeof(match$loser_seed)
 ```
 
-Next we should address the NA problem. We have no way of comparing nonseeded players directly to each other, so for the sake of this analysis, we will assign them the same number that our non-numeric seeds were given.
+Next we should address the NA problem. We have no way of comparing nonseeded players directly to each other, so for the sake of this analysis, we will assign them the same number that our non-numeric seeds were given, to indicate that they are expected to lose to any seeded player.
+
+```{r}
+match$winner_seed[is.na(match$winner_seed)] <- 50
+match$loser_seed[is.na(match$loser_seed)] <- 50
+```
 
 In fact, since we can't obtain any useful insight from matches between two unseeded players, let's just remove these matches from our table entirely.
+
+```{r}
+match <- filter(match, (winner_seed != 50 | loser_seed != 50))
+```
