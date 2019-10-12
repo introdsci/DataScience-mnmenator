@@ -19,7 +19,7 @@ It is important to note that the lower the numeric value of the seed is, the hig
 
 The first deliverable collects our data and massages it into usable form, as well as trimming away data that we don't need. It also provides visualizations that give extra insight into our data and answer our initial questions.
 
-
+<a href="deliverable1.html">Discovery and Data Preparation</a>
 
 ### 2. Model Planning and Building
 
