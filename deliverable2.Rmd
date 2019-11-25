@@ -1,0 +1,16 @@
+---
+title: "Model Planning and Building"
+author: "Michael Messmer"
+output:
+  html_document:
+    df_print: paged
+---
+
+## Introduction
+
+An interesting aspect of tennis is that it's possible for the winner of the match to have won fewer total points than the loser of the match. This observation leads me to the following question: Is the ratio of points won to points lost a good predictor of the overall winner? As a predictor, how does it compare to seeding?
+
+```{r}
+suppressMessages(library("jsonlite"))
+stats <- fromJSON("https://pkgstore.datahub.io/sports-data/atp-world-tour-tennis-data/match_stats_2017_unindexed_json/data/2bdd108bc9cefe392847ac8cf111adc0/match_stats_2017_unindexed_json.json")
+```

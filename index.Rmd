@@ -23,7 +23,7 @@ The first deliverable collects our data and massages it into usable form, as wel
 
 ### 2. Model Planning and Building
 
-Coming soon...
+<a href="deliverable2.html">Model Planning and Building</a>
 
 ### 3. Results and Operationalization
 
