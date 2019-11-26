@@ -1673,21 +1673,128 @@ source(&quot;part1.r&quot;)</code></pre>
 <p>This dataset has quite a few variables that will not be relevant for our analysis, and I will not be explaining those. A lot of the variables from our initial dataset are also contained in our new data and were defined in part 1, so for the sake of brevity I will not be defining them again here. Any variable that starts with “winner” applies to the winner of the match and has an equivalent stat for the loser of the match, and I will only be explaining from the perspective of the winner.</p>
 <p>At this point in the analysis a better understanding of tennis concepts becomes more important, so I will explain some relevant information. A match is broken up into sets, a set is broken up into games, and a game is broken up into points. A player must win a certain number of points to win a game, a certain number of games to win a set, and a certain number of sets to win a match. The serving player gets to serve twice on each of their service points. A first serve is generally harder to return but is more likely to miss than a second serve. The player who is not serving is known as the returning player. A break point is when the returning player will win the game if they win the next point. The serving player is at an advantage, so generally speaking each player is expected to win their service games, which is why break points are significant.</p>
 <p>Now to define our new variables:</p>
-<p>winner_first_serves_in: The amount of successful first serves by the winning player.</p>
-<p>winner_first_serves_total: The total amount of first serves, both misses and successes, by the winning player.</p>
 <p>winner_service_points_won: The amount of points won by the winning player while serving.</p>
 <p>winner_service_points_total: The total amount of points played by the winning player while serving.</p>
 <p>winner_break_points_converted: The amount of break points won by the winning player while returning.</p>
 <p>winner_break_points_return_total: The total amount of break points played by the winning player while returning.</p>
-<p>winner_first_serve_return_won: The amount of points won by the winning player while returning their opponent’s first serve.</p>
-<p>winner_first_serve_return_total: The total amount of points played by the winning player while returning their opponent’s first serve.</p>
-<p>winner_second_serve_return_won: The amount of points won by the winning player while returning their opponent’s second serve.</p>
-<p>winner_second_serve_return_total: The total amount of points played by the winning player while returning their opponent’s second serve.</p>
 <p>winner_return_points_won: The amount of points won by the winning player while returning.</p>
 <p>winner_return_points_total: The total amount of points played by the winning player while returning.</p>
+<p>winner_total_points_won: The total amount of points won by the winning player.</p>
+<p>winner_total_points_total: The total amount of points played by both players, since both the winner and loser must play the same amount of points.</p>
 <p>match_duration: How long the match lasted, in minutes.</p>
+</div>
+<div id="tidying-the-data" class="section level2">
+<h2>Tidying the Data</h2>
+<p>Once again, we need to import and tidy the data.</p>
 <pre class="r"><code>suppressMessages(library(&quot;jsonlite&quot;))
-stats &lt;- fromJSON(&quot;https://pkgstore.datahub.io/sports-data/atp-world-tour-tennis-data/match_stats_2017_unindexed_json/data/2bdd108bc9cefe392847ac8cf111adc0/match_stats_2017_unindexed_json.json&quot;)</code></pre>
+suppressMessages(new_data &lt;- fromJSON(&quot;https://pkgstore.datahub.io/sports-data/atp-world-tour-tennis-data/match_stats_2017_unindexed_json/data/2bdd108bc9cefe392847ac8cf111adc0/match_stats_2017_unindexed_json.json&quot;))</code></pre>
+<p>Let’s take a look at our column names and make sure they’re all suitable.</p>
+<pre class="r"><code>colnames(new_data)</code></pre>
+<pre><code>##  [1] &quot;loser_aces&quot;                       &quot;loser_break_points_converted&quot;    
+##  [3] &quot;loser_break_points_return_total&quot;  &quot;loser_break_points_saved&quot;        
+##  [5] &quot;loser_break_points_serve_total&quot;   &quot;loser_double_faults&quot;             
+##  [7] &quot;loser_first_serve_points_total&quot;   &quot;loser_first_serve_points_won&quot;    
+##  [9] &quot;loser_first_serve_return_total&quot;   &quot;loser_first_serve_return_won&quot;    
+## [11] &quot;loser_first_serves_in&quot;            &quot;loser_first_serves_total&quot;        
+## [13] &quot;loser_return_games_played&quot;        &quot;loser_return_points_total&quot;       
+## [15] &quot;loser_return_points_won&quot;          &quot;loser_second_serve_points_total&quot; 
+## [17] &quot;loser_second_serve_points_won&quot;    &quot;loser_second_serve_return_total&quot; 
+## [19] &quot;loser_second_serve_return_won&quot;    &quot;loser_service_games_played&quot;      
+## [21] &quot;loser_service_points_total&quot;       &quot;loser_service_points_won&quot;        
+## [23] &quot;loser_total_points_total&quot;         &quot;loser_total_points_won&quot;          
+## [25] &quot;match_duration&quot;                   &quot;match_id&quot;                        
+## [27] &quot;match_stats_url_suffix&quot;           &quot;match_time&quot;                      
+## [29] &quot;tourney_order&quot;                    &quot;winner_aces&quot;                     
+## [31] &quot;winner_break_points_converted&quot;    &quot;winner_break_points_return_total&quot;
+## [33] &quot;winner_break_points_saved&quot;        &quot;winner_break_points_serve_total&quot; 
+## [35] &quot;winner_double_faults&quot;             &quot;winner_first_serve_points_total&quot; 
+## [37] &quot;winner_first_serve_points_won&quot;    &quot;winner_first_serve_return_total&quot; 
+## [39] &quot;winner_first_serve_return_won&quot;    &quot;winner_first_serves_in&quot;          
+## [41] &quot;winner_first_serves_total&quot;        &quot;winner_return_games_played&quot;      
+## [43] &quot;winner_return_points_total&quot;       &quot;winner_return_points_won&quot;        
+## [45] &quot;winner_second_serve_points_total&quot; &quot;winner_second_serve_points_won&quot;  
+## [47] &quot;winner_second_serve_return_total&quot; &quot;winner_second_serve_return_won&quot;  
+## [49] &quot;winner_service_games_played&quot;      &quot;winner_service_points_total&quot;     
+## [51] &quot;winner_service_points_won&quot;        &quot;winner_total_points_total&quot;       
+## [53] &quot;winner_total_points_won&quot;</code></pre>
+<p>The names are all good, but much of this data is irrelevant to our analysis. Let’s create a new table with only the important data</p>
+<pre class="r"><code>stats &lt;- tibble(
+  &quot;match_id&quot;=new_data$match_id,
+  &quot;winner_service_points_won&quot;=new_data$winner_service_points_won,
+  &quot;winner_service_points_total&quot;=new_data$winner_service_points_total,
+  &quot;winner_break_points_converted&quot;=new_data$winner_break_points_converted,
+  &quot;winner_break_points_return_total&quot;=new_data$winner_break_points_return_total,
+  &quot;winner_return_points_won&quot;=new_data$winner_return_points_won,
+  &quot;winner_return_points_total&quot;=new_data$winner_return_points_total,
+  &quot;winner_total_points_won&quot;=new_data$winner_total_points_won,
+  &quot;loser_service_points_won&quot;=new_data$loser_service_points_won,
+  &quot;loser_service_points_total&quot;=new_data$loser_service_points_total,
+  &quot;loser_break_points_converted&quot;=new_data$loser_break_points_converted,
+  &quot;loser_break_points_return_total&quot;=new_data$loser_break_points_return_total,
+  &quot;loser_return_points_won&quot;=new_data$loser_return_points_won,
+  &quot;loser_return_points_total&quot;=new_data$loser_return_points_total,
+  &quot;loser_total_points_won&quot;=new_data$loser_total_points_won,
+  &quot;total_points&quot;=new_data$winner_total_points_total,
+  &quot;match_duration&quot;=new_data$match_duration
+)
+head(stats)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["match_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["winner_service_points_won"],"name":[2],"type":["int"],"align":["right"]},{"label":["winner_service_points_total"],"name":[3],"type":["int"],"align":["right"]},{"label":["winner_break_points_converted"],"name":[4],"type":["int"],"align":["right"]},{"label":["winner_break_points_return_total"],"name":[5],"type":["int"],"align":["right"]},{"label":["winner_return_points_won"],"name":[6],"type":["int"],"align":["right"]},{"label":["winner_return_points_total"],"name":[7],"type":["int"],"align":["right"]},{"label":["winner_total_points_won"],"name":[8],"type":["int"],"align":["right"]},{"label":["loser_service_points_won"],"name":[9],"type":["int"],"align":["right"]},{"label":["loser_service_points_total"],"name":[10],"type":["int"],"align":["right"]},{"label":["loser_break_points_converted"],"name":[11],"type":["int"],"align":["right"]},{"label":["loser_break_points_return_total"],"name":[12],"type":["int"],"align":["right"]},{"label":["loser_return_points_won"],"name":[13],"type":["int"],"align":["right"]},{"label":["loser_return_points_total"],"name":[14],"type":["int"],"align":["right"]},{"label":["loser_total_points_won"],"name":[15],"type":["int"],"align":["right"]},{"label":["total_points"],"name":[16],"type":["int"],"align":["right"]},{"label":["match_duration"],"name":[17],"type":["int"],"align":["right"]}],"data":[{"1":"2017-339-r975-n409","2":"66","3":"97","4":"2","5":"4","6":"31","7":"84","8":"97","9":"53","10":"84","11":"1","12":"7","13":"31","14":"97","15":"84","16":"181","17":"141"},{"1":"2017-339-d875-n552","2":"53","3":"77","4":"3","5":"5","6":"24","7":"69","8":"77","9":"45","10":"69","11":"2","12":"7","13":"24","14":"77","15":"69","16":"146","17":"109"},{"1":"2017-339-d875-r975","2":"45","3":"58","4":"2","5":"4","6":"21","7":"61","8":"66","9":"40","10":"61","11":"0","12":"0","13":"13","14":"58","15":"53","16":"119","17":"88"},{"1":"2017-339-n552-w367","2":"51","3":"77","4":"2","5":"2","6":"24","7":"61","8":"75","9":"37","10":"61","11":"1","12":"5","13":"26","14":"77","15":"63","16":"138","17":"102"},{"1":"2017-339-d875-tb69","2":"65","3":"94","4":"3","5":"7","6":"29","7":"82","8":"94","9":"53","10":"82","11":"1","12":"14","13":"29","14":"94","15":"82","16":"176","17":"125"},{"1":"2017-339-w367-e831","2":"75","3":"119","4":"4","5":"10","6":"34","7":"97","8":"109","9":"63","10":"97","11":"2","12":"13","13":"44","14":"119","15":"107","16":"216","17":"156"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Now our table contains just the match id, which we will use to consolidate with our previous data, and the info that might be useful for our model.</p>
+<pre class="r"><code>sum(is.na(stats))</code></pre>
+<pre><code>## [1] 0</code></pre>
+<p>There is no missing data in our new table, which is great. All of our data is encoded as appropriate types as well, so this data is good to go. Now we will consolidate our tables into one.</p>
+<p>Let’s start by filtering out unnecessary info from our first table.</p>
+<pre class="r"><code>match &lt;- select(match, c(match_id, winner_seed, loser_seed))</code></pre>
+<p>Now we’ll create a new table that combines our data.</p>
+<pre class="r"><code>combined &lt;- inner_join(match, stats, by = &quot;match_id&quot;)
+head(combined)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["match_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["winner_seed"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["loser_seed"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["winner_service_points_won"],"name":[4],"type":["int"],"align":["right"]},{"label":["winner_service_points_total"],"name":[5],"type":["int"],"align":["right"]},{"label":["winner_break_points_converted"],"name":[6],"type":["int"],"align":["right"]},{"label":["winner_break_points_return_total"],"name":[7],"type":["int"],"align":["right"]},{"label":["winner_return_points_won"],"name":[8],"type":["int"],"align":["right"]},{"label":["winner_return_points_total"],"name":[9],"type":["int"],"align":["right"]},{"label":["winner_total_points_won"],"name":[10],"type":["int"],"align":["right"]},{"label":["loser_service_points_won"],"name":[11],"type":["int"],"align":["right"]},{"label":["loser_service_points_total"],"name":[12],"type":["int"],"align":["right"]},{"label":["loser_break_points_converted"],"name":[13],"type":["int"],"align":["right"]},{"label":["loser_break_points_return_total"],"name":[14],"type":["int"],"align":["right"]},{"label":["loser_return_points_won"],"name":[15],"type":["int"],"align":["right"]},{"label":["loser_return_points_total"],"name":[16],"type":["int"],"align":["right"]},{"label":["loser_total_points_won"],"name":[17],"type":["int"],"align":["right"]},{"label":["total_points"],"name":[18],"type":["int"],"align":["right"]},{"label":["match_duration"],"name":[19],"type":["int"],"align":["right"]}],"data":[{"1":"2017-339-d875-n552","2":"7","3":"3","4":"53","5":"77","6":"3","7":"5","8":"24","9":"69","10":"77","11":"45","12":"69","13":"2","14":"7","15":"24","16":"77","17":"69","18":"146","19":"109"},{"1":"2017-339-d875-r975","2":"7","3":"1","4":"45","5":"58","6":"2","7":"4","8":"21","9":"61","10":"66","11":"40","12":"61","13":"0","14":"0","15":"13","16":"58","17":"53","18":"119","19":"88"},{"1":"2017-339-n552-w367","2":"3","3":"2","4":"51","5":"77","6":"2","7":"2","8":"24","9":"61","10":"75","11":"37","12":"61","13":"1","14":"5","15":"26","16":"77","17":"63","18":"138","19":"102"},{"1":"2017-339-r975-n409","2":"1","3":"5","4":"66","5":"97","6":"2","7":"4","8":"31","9":"84","10":"97","11":"53","12":"84","13":"1","14":"7","15":"31","16":"97","17":"84","18":"181","19":"141"},{"1":"2017-339-w367-e831","2":"2","3":"34","4":"75","5":"119","6":"4","7":"10","8":"34","9":"97","10":"109","11":"63","12":"97","13":"2","14":"13","15":"44","16":"119","17":"107","18":"216","19":"156"},{"1":"2017-339-n552-tc61","2":"3","3":"34","4":"28","5":"34","6":"5","7":"8","8":"27","9":"47","10":"55","11":"20","12":"47","13":"0","14":"0","15":"6","16":"34","17":"26","18":"81","19":"62"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Before we create our model, we want to adjust the data to be more fit for linear regression. We want to predict winner_total_points_won, but most of our variables won’t be proper predictors. For example, any variable that indicates a point won by the winner (winner_break_points_converted, winner_service_points_won, etc.) will be directly correlated to the total points won. The total_points_won is just a sum of all of the types of points won. Therefore, it would be much more interesting to look at ratios of points won to points total for each type, rather than just points won. We will create a new table that contains ratios for all of our relevant data. We will also add a new variable indicating whether or not the winner was the higher seed.</p>
+<pre class="r"><code>ratios &lt;- tibble(
+  &quot;match_id&quot;=combined$match_id,
+  &quot;winner_seed&quot;=combined$winner_seed,
+  &quot;winner_service_point_ratio&quot;=combined$winner_service_points_won/combined$winner_service_points_total,
+  &quot;winner_break_point_ratio&quot;=combined$winner_break_points_converted/combined$winner_break_points_return_total,
+  &quot;winner_return_point_ratio&quot;=combined$winner_return_points_won/combined$winner_return_points_total,
+  &quot;winner_total_point_ratio&quot;=combined$winner_total_points_won/combined$total_points,
+  &quot;loser_seed&quot;=combined$loser_seed,
+  &quot;loser_service_point_ratio&quot;=combined$loser_service_points_won/combined$loser_service_points_total,
+  &quot;loser_break_point_ratio&quot;=combined$loser_break_points_converted/combined$loser_break_points_return_total,
+  &quot;loser_return_point_ratio&quot;=combined$loser_return_points_won/combined$loser_return_points_total,
+  &quot;loser_total_point_ratio&quot;=combined$loser_total_points_won/combined$total_points,
+  &quot;match_duration&quot;=combined$match_duration,
+  &quot;higher_seed_won&quot;=combined$winner_seed&lt;combined$loser_seed
+)
+head(ratios)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["match_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["winner_seed"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["winner_service_point_ratio"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["winner_break_point_ratio"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["winner_return_point_ratio"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["winner_total_point_ratio"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["loser_seed"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["loser_service_point_ratio"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["loser_break_point_ratio"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["loser_return_point_ratio"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["loser_total_point_ratio"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["match_duration"],"name":[12],"type":["int"],"align":["right"]},{"label":["higher_seed_won"],"name":[13],"type":["lgl"],"align":["right"]}],"data":[{"1":"2017-339-d875-n552","2":"7","3":"0.6883117","4":"0.600","5":"0.3478261","6":"0.5273973","7":"3","8":"0.6521739","9":"0.2857143","10":"0.3116883","11":"0.4726027","12":"109","13":"FALSE"},{"1":"2017-339-d875-r975","2":"7","3":"0.7758621","4":"0.500","5":"0.3442623","6":"0.5546218","7":"1","8":"0.6557377","9":"NaN","10":"0.2241379","11":"0.4453782","12":"88","13":"FALSE"},{"1":"2017-339-n552-w367","2":"3","3":"0.6623377","4":"1.000","5":"0.3934426","6":"0.5434783","7":"2","8":"0.6065574","9":"0.2000000","10":"0.3376623","11":"0.4565217","12":"102","13":"FALSE"},{"1":"2017-339-r975-n409","2":"1","3":"0.6804124","4":"0.500","5":"0.3690476","6":"0.5359116","7":"5","8":"0.6309524","9":"0.1428571","10":"0.3195876","11":"0.4640884","12":"141","13":"TRUE"},{"1":"2017-339-w367-e831","2":"2","3":"0.6302521","4":"0.400","5":"0.3505155","6":"0.5046296","7":"34","8":"0.6494845","9":"0.1538462","10":"0.3697479","11":"0.4953704","12":"156","13":"TRUE"},{"1":"2017-339-n552-tc61","2":"3","3":"0.8235294","4":"0.625","5":"0.5744681","6":"0.6790123","7":"34","8":"0.4255319","9":"NaN","10":"0.1764706","11":"0.3209877","12":"62","13":"TRUE"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>One problem is that we have a few NaN values. Presumably these are cases where the type_point_total was equal to 0 and caused a divide by 0 error. Let’s go through and change those values to 0, as that would be the proper ratio.</p>
+<pre class="r"><code>ratios$winner_service_point_ratio[is.nan(ratios$winner_service_point_ratio)] &lt;- 0
+ratios$winner_break_point_ratio[is.nan(ratios$winner_break_point_ratio)] &lt;- 0
+ratios$winner_return_point_ratio[is.nan(ratios$winner_return_point_ratio)] &lt;- 0
+ratios$winner_total_point_ratio[is.nan(ratios$winner_total_point_ratio)] &lt;- 0
+ratios$loser_service_point_ratio[is.nan(ratios$loser_service_point_ratio)] &lt;- 0
+ratios$loser_break_point_ratio[is.nan(ratios$loser_break_point_ratio)] &lt;- 0
+ratios$loser_return_point_ratio[is.nan(ratios$loser_return_point_ratio)] &lt;- 0
+ratios$loser_total_point_ratio[is.nan(ratios$loser_total_point_ratio)] &lt;- 0
+head(ratios)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["match_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["winner_seed"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["winner_service_point_ratio"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["winner_break_point_ratio"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["winner_return_point_ratio"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["winner_total_point_ratio"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["loser_seed"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["loser_service_point_ratio"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["loser_break_point_ratio"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["loser_return_point_ratio"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["loser_total_point_ratio"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["match_duration"],"name":[12],"type":["int"],"align":["right"]},{"label":["higher_seed_won"],"name":[13],"type":["lgl"],"align":["right"]}],"data":[{"1":"2017-339-d875-n552","2":"7","3":"0.6883117","4":"0.600","5":"0.3478261","6":"0.5273973","7":"3","8":"0.6521739","9":"0.2857143","10":"0.3116883","11":"0.4726027","12":"109","13":"FALSE"},{"1":"2017-339-d875-r975","2":"7","3":"0.7758621","4":"0.500","5":"0.3442623","6":"0.5546218","7":"1","8":"0.6557377","9":"0.0000000","10":"0.2241379","11":"0.4453782","12":"88","13":"FALSE"},{"1":"2017-339-n552-w367","2":"3","3":"0.6623377","4":"1.000","5":"0.3934426","6":"0.5434783","7":"2","8":"0.6065574","9":"0.2000000","10":"0.3376623","11":"0.4565217","12":"102","13":"FALSE"},{"1":"2017-339-r975-n409","2":"1","3":"0.6804124","4":"0.500","5":"0.3690476","6":"0.5359116","7":"5","8":"0.6309524","9":"0.1428571","10":"0.3195876","11":"0.4640884","12":"141","13":"TRUE"},{"1":"2017-339-w367-e831","2":"2","3":"0.6302521","4":"0.400","5":"0.3505155","6":"0.5046296","7":"34","8":"0.6494845","9":"0.1538462","10":"0.3697479","11":"0.4953704","12":"156","13":"TRUE"},{"1":"2017-339-n552-tc61","2":"3","3":"0.8235294","4":"0.625","5":"0.5744681","6":"0.6790123","7":"34","8":"0.4255319","9":"0.0000000","10":"0.1764706","11":"0.3209877","12":"62","13":"TRUE"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Now that we’ve got the data in the proper form, it’s finally time to build our model.</p>
 </div>
 
 
