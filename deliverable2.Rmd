@@ -130,6 +130,7 @@ Before we create our model, we want to adjust the data to be more fit for linear
 ```{r}
 ratios <- tibble(
   "match_id"=combined$match_id,
+  "winner_total_points_won"=combined$winner_total_points_won,
   "winner_seed"=combined$winner_seed,
   "winner_service_point_ratio"=combined$winner_service_points_won/combined$winner_service_points_total,
   "winner_break_point_ratio"=combined$winner_break_points_converted/combined$winner_break_points_return_total,
@@ -161,3 +162,36 @@ head(ratios)
 ```
 
 Now that we've got the data in the proper form, it's finally time to build our model.
+
+## Building the Model
+
+We'll start by loading the required library and setting our seed so our analysis will be reproducible.
+
+```{r, warning=FALSE}
+suppressMessages(include("caret"))
+set.seed(385)
+```
+
+We will utilize cross validation by randomly assigning each row in our table to one of either a training set or testing set. The training set will be used to build our model and the testing set will be used to test the model.
+
+```{r}
+sample_selection <- createDataPartition(ratios$winner_total_points_won, p=.75, list=FALSE)
+train <- ratios[sample_selection, ]
+test <- ratios[-sample_selection, ]
+```
+
+Now we will build a linear model and perform multiple linear regression on our model. We will use winner_total_points_won as our dependent variable, as that is the variable we want to be able to predict. Each match has a unique match id, so it makes little sense to include it as a possible predictor. We will check all other variables.
+
+```{r}
+train_model <- lm(winner_total_points_won ~ . - match_id, data=train)
+summary(train_model)
+```
+
+For now we'll just look at the p-values, the Pr(>|t|) column. We're only concerned with variables that have a p-value < .05, as that indicates that they are statistically significant predictors. Let's create another model with only the significant predictors from our previous model.
+
+```{r}
+train_model2 <- lm(winner_total_points_won ~ winner_seed + winner_service_point_ratio + winner_break_point_ratio + winner_return_point_ratio + loser_seed + match_duration, data=train)
+summary(train_model2)
+```
+
+

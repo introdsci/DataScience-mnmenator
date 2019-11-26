@@ -1760,6 +1760,7 @@ head(combined)</code></pre>
 <p>Before we create our model, we want to adjust the data to be more fit for linear regression. We want to predict winner_total_points_won, but most of our variables won’t be proper predictors. For example, any variable that indicates a point won by the winner (winner_break_points_converted, winner_service_points_won, etc.) will be directly correlated to the total points won. The total_points_won is just a sum of all of the types of points won. Therefore, it would be much more interesting to look at ratios of points won to points total for each type, rather than just points won. We will create a new table that contains ratios for all of our relevant data. We will also add a new variable indicating whether or not the winner was the higher seed.</p>
 <pre class="r"><code>ratios &lt;- tibble(
   &quot;match_id&quot;=combined$match_id,
+  &quot;winner_total_points_won&quot;=combined$winner_total_points_won,
   &quot;winner_seed&quot;=combined$winner_seed,
   &quot;winner_service_point_ratio&quot;=combined$winner_service_points_won/combined$winner_service_points_total,
   &quot;winner_break_point_ratio&quot;=combined$winner_break_points_converted/combined$winner_break_points_return_total,
@@ -1776,7 +1777,7 @@ head(combined)</code></pre>
 head(ratios)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["match_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["winner_seed"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["winner_service_point_ratio"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["winner_break_point_ratio"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["winner_return_point_ratio"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["winner_total_point_ratio"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["loser_seed"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["loser_service_point_ratio"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["loser_break_point_ratio"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["loser_return_point_ratio"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["loser_total_point_ratio"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["match_duration"],"name":[12],"type":["int"],"align":["right"]},{"label":["higher_seed_won"],"name":[13],"type":["lgl"],"align":["right"]}],"data":[{"1":"2017-339-d875-n552","2":"7","3":"0.6883117","4":"0.600","5":"0.3478261","6":"0.5273973","7":"3","8":"0.6521739","9":"0.2857143","10":"0.3116883","11":"0.4726027","12":"109","13":"FALSE"},{"1":"2017-339-d875-r975","2":"7","3":"0.7758621","4":"0.500","5":"0.3442623","6":"0.5546218","7":"1","8":"0.6557377","9":"NaN","10":"0.2241379","11":"0.4453782","12":"88","13":"FALSE"},{"1":"2017-339-n552-w367","2":"3","3":"0.6623377","4":"1.000","5":"0.3934426","6":"0.5434783","7":"2","8":"0.6065574","9":"0.2000000","10":"0.3376623","11":"0.4565217","12":"102","13":"FALSE"},{"1":"2017-339-r975-n409","2":"1","3":"0.6804124","4":"0.500","5":"0.3690476","6":"0.5359116","7":"5","8":"0.6309524","9":"0.1428571","10":"0.3195876","11":"0.4640884","12":"141","13":"TRUE"},{"1":"2017-339-w367-e831","2":"2","3":"0.6302521","4":"0.400","5":"0.3505155","6":"0.5046296","7":"34","8":"0.6494845","9":"0.1538462","10":"0.3697479","11":"0.4953704","12":"156","13":"TRUE"},{"1":"2017-339-n552-tc61","2":"3","3":"0.8235294","4":"0.625","5":"0.5744681","6":"0.6790123","7":"34","8":"0.4255319","9":"NaN","10":"0.1764706","11":"0.3209877","12":"62","13":"TRUE"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["match_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["winner_total_points_won"],"name":[2],"type":["int"],"align":["right"]},{"label":["winner_seed"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["winner_service_point_ratio"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["winner_break_point_ratio"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["winner_return_point_ratio"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["winner_total_point_ratio"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["loser_seed"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["loser_service_point_ratio"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["loser_break_point_ratio"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["loser_return_point_ratio"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["loser_total_point_ratio"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["match_duration"],"name":[13],"type":["int"],"align":["right"]},{"label":["higher_seed_won"],"name":[14],"type":["lgl"],"align":["right"]}],"data":[{"1":"2017-339-d875-n552","2":"77","3":"7","4":"0.6883117","5":"0.600","6":"0.3478261","7":"0.5273973","8":"3","9":"0.6521739","10":"0.2857143","11":"0.3116883","12":"0.4726027","13":"109","14":"FALSE"},{"1":"2017-339-d875-r975","2":"66","3":"7","4":"0.7758621","5":"0.500","6":"0.3442623","7":"0.5546218","8":"1","9":"0.6557377","10":"NaN","11":"0.2241379","12":"0.4453782","13":"88","14":"FALSE"},{"1":"2017-339-n552-w367","2":"75","3":"3","4":"0.6623377","5":"1.000","6":"0.3934426","7":"0.5434783","8":"2","9":"0.6065574","10":"0.2000000","11":"0.3376623","12":"0.4565217","13":"102","14":"FALSE"},{"1":"2017-339-r975-n409","2":"97","3":"1","4":"0.6804124","5":"0.500","6":"0.3690476","7":"0.5359116","8":"5","9":"0.6309524","10":"0.1428571","11":"0.3195876","12":"0.4640884","13":"141","14":"TRUE"},{"1":"2017-339-w367-e831","2":"109","3":"2","4":"0.6302521","5":"0.400","6":"0.3505155","7":"0.5046296","8":"34","9":"0.6494845","10":"0.1538462","11":"0.3697479","12":"0.4953704","13":"156","14":"TRUE"},{"1":"2017-339-n552-tc61","2":"55","3":"3","4":"0.8235294","5":"0.625","6":"0.5744681","7":"0.6790123","8":"34","9":"0.4255319","10":"NaN","11":"0.1764706","12":"0.3209877","13":"62","14":"TRUE"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>One problem is that we have a few NaN values. Presumably these are cases where the type_point_total was equal to 0 and caused a divide by 0 error. Let’s go through and change those values to 0, as that would be the proper ratio.</p>
@@ -1791,10 +1792,80 @@ ratios$loser_total_point_ratio[is.nan(ratios$loser_total_point_ratio)] &lt;- 0
 head(ratios)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["match_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["winner_seed"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["winner_service_point_ratio"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["winner_break_point_ratio"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["winner_return_point_ratio"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["winner_total_point_ratio"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["loser_seed"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["loser_service_point_ratio"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["loser_break_point_ratio"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["loser_return_point_ratio"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["loser_total_point_ratio"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["match_duration"],"name":[12],"type":["int"],"align":["right"]},{"label":["higher_seed_won"],"name":[13],"type":["lgl"],"align":["right"]}],"data":[{"1":"2017-339-d875-n552","2":"7","3":"0.6883117","4":"0.600","5":"0.3478261","6":"0.5273973","7":"3","8":"0.6521739","9":"0.2857143","10":"0.3116883","11":"0.4726027","12":"109","13":"FALSE"},{"1":"2017-339-d875-r975","2":"7","3":"0.7758621","4":"0.500","5":"0.3442623","6":"0.5546218","7":"1","8":"0.6557377","9":"0.0000000","10":"0.2241379","11":"0.4453782","12":"88","13":"FALSE"},{"1":"2017-339-n552-w367","2":"3","3":"0.6623377","4":"1.000","5":"0.3934426","6":"0.5434783","7":"2","8":"0.6065574","9":"0.2000000","10":"0.3376623","11":"0.4565217","12":"102","13":"FALSE"},{"1":"2017-339-r975-n409","2":"1","3":"0.6804124","4":"0.500","5":"0.3690476","6":"0.5359116","7":"5","8":"0.6309524","9":"0.1428571","10":"0.3195876","11":"0.4640884","12":"141","13":"TRUE"},{"1":"2017-339-w367-e831","2":"2","3":"0.6302521","4":"0.400","5":"0.3505155","6":"0.5046296","7":"34","8":"0.6494845","9":"0.1538462","10":"0.3697479","11":"0.4953704","12":"156","13":"TRUE"},{"1":"2017-339-n552-tc61","2":"3","3":"0.8235294","4":"0.625","5":"0.5744681","6":"0.6790123","7":"34","8":"0.4255319","9":"0.0000000","10":"0.1764706","11":"0.3209877","12":"62","13":"TRUE"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["match_id"],"name":[1],"type":["chr"],"align":["left"]},{"label":["winner_total_points_won"],"name":[2],"type":["int"],"align":["right"]},{"label":["winner_seed"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["winner_service_point_ratio"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["winner_break_point_ratio"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["winner_return_point_ratio"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["winner_total_point_ratio"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["loser_seed"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["loser_service_point_ratio"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["loser_break_point_ratio"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["loser_return_point_ratio"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["loser_total_point_ratio"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["match_duration"],"name":[13],"type":["int"],"align":["right"]},{"label":["higher_seed_won"],"name":[14],"type":["lgl"],"align":["right"]}],"data":[{"1":"2017-339-d875-n552","2":"77","3":"7","4":"0.6883117","5":"0.600","6":"0.3478261","7":"0.5273973","8":"3","9":"0.6521739","10":"0.2857143","11":"0.3116883","12":"0.4726027","13":"109","14":"FALSE"},{"1":"2017-339-d875-r975","2":"66","3":"7","4":"0.7758621","5":"0.500","6":"0.3442623","7":"0.5546218","8":"1","9":"0.6557377","10":"0.0000000","11":"0.2241379","12":"0.4453782","13":"88","14":"FALSE"},{"1":"2017-339-n552-w367","2":"75","3":"3","4":"0.6623377","5":"1.000","6":"0.3934426","7":"0.5434783","8":"2","9":"0.6065574","10":"0.2000000","11":"0.3376623","12":"0.4565217","13":"102","14":"FALSE"},{"1":"2017-339-r975-n409","2":"97","3":"1","4":"0.6804124","5":"0.500","6":"0.3690476","7":"0.5359116","8":"5","9":"0.6309524","10":"0.1428571","11":"0.3195876","12":"0.4640884","13":"141","14":"TRUE"},{"1":"2017-339-w367-e831","2":"109","3":"2","4":"0.6302521","5":"0.400","6":"0.3505155","7":"0.5046296","8":"34","9":"0.6494845","10":"0.1538462","11":"0.3697479","12":"0.4953704","13":"156","14":"TRUE"},{"1":"2017-339-n552-tc61","2":"55","3":"3","4":"0.8235294","5":"0.625","6":"0.5744681","7":"0.6790123","8":"34","9":"0.4255319","10":"0.0000000","11":"0.1764706","12":"0.3209877","13":"62","14":"TRUE"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <p>Now that we’ve got the data in the proper form, it’s finally time to build our model.</p>
+</div>
+<div id="building-the-model" class="section level2">
+<h2>Building the Model</h2>
+<p>We’ll start by loading the required library and setting our seed so our analysis will be reproducible.</p>
+<pre class="r"><code>suppressMessages(include(&quot;caret&quot;))
+set.seed(385)</code></pre>
+<p>We will utilize cross validation by randomly assigning each row in our table to one of either a training set or testing set. The training set will be used to build our model and the testing set will be used to test the model.</p>
+<pre class="r"><code>sample_selection &lt;- createDataPartition(ratios$winner_total_points_won, p=.75, list=FALSE)
+train &lt;- ratios[sample_selection, ]
+test &lt;- ratios[-sample_selection, ]</code></pre>
+<p>Now we will build a linear model and perform multiple linear regression on our model. We will use winner_total_points_won as our dependent variable, as that is the variable we want to be able to predict. Each match has a unique match id, so it makes little sense to include it as a possible predictor. We will check all other variables.</p>
+<pre class="r"><code>train_model &lt;- lm(winner_total_points_won ~ . - match_id, data=train)
+summary(train_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = winner_total_points_won ~ . - match_id, data = train)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -27.544  -4.415  -0.120   4.371  49.731 
+## 
+## Coefficients: (2 not defined because of singularities)
+##                              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                -13.496442   9.994792  -1.350 0.177062    
+## winner_seed                  0.192875   0.021722   8.879  &lt; 2e-16 ***
+## winner_service_point_ratio  35.812128   7.844253   4.565 5.30e-06 ***
+## winner_break_point_ratio    -1.441020   0.905801  -1.591 0.111799    
+## winner_return_point_ratio   29.096307   8.153405   3.569 0.000368 ***
+## winner_total_point_ratio   -18.381955  18.301982  -1.004 0.315325    
+## loser_seed                   0.113882   0.022257   5.117 3.42e-07 ***
+## loser_service_point_ratio          NA         NA      NA       NA    
+## loser_break_point_ratio     -0.392647   0.676952  -0.580 0.561967    
+## loser_return_point_ratio   -14.364317   8.772297  -1.637 0.101695    
+## loser_total_point_ratio            NA         NA      NA       NA    
+## match_duration               0.672615   0.005789 116.184  &lt; 2e-16 ***
+## higher_seed_wonTRUE          1.702682   0.863752   1.971 0.048835 *  
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 7.385 on 1947 degrees of freedom
+## Multiple R-squared:  0.9156, Adjusted R-squared:  0.9152 
+## F-statistic:  2112 on 10 and 1947 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>For now we’ll just look at the p-values, the Pr(&gt;|t|) column. We’re only concerned with variables that have a p-value &lt; .05, as that indicates that they are statistically significant predictors. Let’s create another model with only the significant predictors from our previous model.</p>
+<pre class="r"><code>train_model2 &lt;- lm(winner_total_points_won ~ winner_seed + winner_service_point_ratio + winner_break_point_ratio + winner_return_point_ratio + loser_seed + match_duration, data=train)
+summary(train_model2)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = winner_total_points_won ~ winner_seed + winner_service_point_ratio + 
+##     winner_break_point_ratio + winner_return_point_ratio + loser_seed + 
+##     match_duration, data = train)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -26.780  -4.404  -0.158   4.347  49.306 
+## 
+## Coefficients:
+##                              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                -29.018920   2.927022  -9.914   &lt;2e-16 ***
+## winner_seed                  0.163282   0.015745  10.371   &lt;2e-16 ***
+## winner_service_point_ratio  43.095499   2.718706  15.851   &lt;2e-16 ***
+## winner_break_point_ratio    -1.869711   0.838273  -2.230   0.0258 *  
+## winner_return_point_ratio   21.469164   2.556510   8.398   &lt;2e-16 ***
+## loser_seed                   0.145063   0.015227   9.526   &lt;2e-16 ***
+## match_duration               0.673225   0.005536 121.618   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 7.391 on 1951 degrees of freedom
+## Multiple R-squared:  0.9153, Adjusted R-squared:  0.9151 
+## F-statistic:  3514 on 6 and 1951 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 
 
