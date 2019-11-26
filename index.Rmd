@@ -23,6 +23,8 @@ The first deliverable collects our data and massages it into usable form, as wel
 
 ### 2. Model Planning and Building
 
+The second deliverable builds off of the data from our first deliverable, supplementing it with extra data and building a model to predict the total amount of points won by the winner of a match.
+
 <a href="deliverable2.html">Model Planning and Building</a>
 
 ### 3. Results and Operationalization

@@ -1662,7 +1662,7 @@ source(&quot;part1.r&quot;)</code></pre>
 {"columns":[{"label":["tourney_slug"],"name":[1],"type":["chr"],"align":["left"]},{"label":["tourney_round_name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["match_id"],"name":[3],"type":["chr"],"align":["left"]},{"label":["winner_name"],"name":[4],"type":["chr"],"align":["left"]},{"label":["loser_name"],"name":[5],"type":["chr"],"align":["left"]},{"label":["winner_seed"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["loser_seed"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"brisbane","2":"Finals","3":"2017-339-d875-n552","4":"Grigor Dimitrov","5":"Kei Nishikori","6":"7","7":"3"},{"1":"brisbane","2":"Semi-Finals","3":"2017-339-d875-r975","4":"Grigor Dimitrov","5":"Milos Raonic","6":"7","7":"1"},{"1":"brisbane","2":"Semi-Finals","3":"2017-339-n552-w367","4":"Kei Nishikori","5":"Stan Wawrinka","6":"3","7":"2"},{"1":"brisbane","2":"Quarter-Finals","3":"2017-339-r975-n409","4":"Milos Raonic","5":"Rafael Nadal","6":"1","7":"5"},{"1":"brisbane","2":"Quarter-Finals","3":"2017-339-w367-e831","4":"Stan Wawrinka","5":"Kyle Edmund","6":"2","7":"34"},{"1":"brisbane","2":"Quarter-Finals","3":"2017-339-n552-tc61","4":"Kei Nishikori","5":"Jordan Thompson","6":"3","7":"34"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-<p>Each row in our table is a single match. Specifically, any match where at least 1 player was seeded. It’s important to remember that a seed value of 34 means that player was unseed.</p>
+<p>Each row in our table is a single match. Specifically, any match where at least 1 player was seeded. It’s important to remember that a seed value of 34 means that player was unseeded.</p>
 </div>
 <div id="extra-data" class="section level2">
 <h2>Extra Data</h2>
@@ -1801,7 +1801,7 @@ head(ratios)</code></pre>
 <h2>Building the Model</h2>
 <p>We’ll start by loading the required library and setting our seed so our analysis will be reproducible.</p>
 <pre class="r"><code>suppressMessages(include(&quot;caret&quot;))
-set.seed(385)</code></pre>
+set.seed(384)</code></pre>
 <p>We will utilize cross validation by randomly assigning each row in our table to one of either a training set or testing set. The training set will be used to build our model and the testing set will be used to test the model.</p>
 <pre class="r"><code>sample_selection &lt;- createDataPartition(ratios$winner_total_points_won, p=.75, list=FALSE)
 train &lt;- ratios[sample_selection, ]
@@ -1815,57 +1815,78 @@ summary(train_model)</code></pre>
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -27.544  -4.415  -0.120   4.371  49.731 
+## -87.099  -4.347  -0.106   4.454  50.108 
 ## 
 ## Coefficients: (2 not defined because of singularities)
 ##                              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                -13.496442   9.994792  -1.350 0.177062    
-## winner_seed                  0.192875   0.021722   8.879  &lt; 2e-16 ***
-## winner_service_point_ratio  35.812128   7.844253   4.565 5.30e-06 ***
-## winner_break_point_ratio    -1.441020   0.905801  -1.591 0.111799    
-## winner_return_point_ratio   29.096307   8.153405   3.569 0.000368 ***
-## winner_total_point_ratio   -18.381955  18.301982  -1.004 0.315325    
-## loser_seed                   0.113882   0.022257   5.117 3.42e-07 ***
+## (Intercept)                -11.271697  10.334994  -1.091  0.27557    
+## winner_seed                  0.166889   0.022971   7.265 5.37e-13 ***
+## winner_service_point_ratio  32.830335   8.082499   4.062 5.06e-05 ***
+## winner_break_point_ratio    -3.040092   0.936392  -3.247  0.00119 ** 
+## winner_return_point_ratio   21.794745   8.533624   2.554  0.01073 *  
+## winner_total_point_ratio   -12.389216  19.124075  -0.648  0.51717    
+## loser_seed                   0.142176   0.021803   6.521 8.87e-11 ***
 ## loser_service_point_ratio          NA         NA      NA       NA    
-## loser_break_point_ratio     -0.392647   0.676952  -0.580 0.561967    
-## loser_return_point_ratio   -14.364317   8.772297  -1.637 0.101695    
+## loser_break_point_ratio     -1.724447   0.684997  -2.517  0.01190 *  
+## loser_return_point_ratio    -8.121984   9.083085  -0.894  0.37133    
 ## loser_total_point_ratio            NA         NA      NA       NA    
-## match_duration               0.672615   0.005789 116.184  &lt; 2e-16 ***
-## higher_seed_wonTRUE          1.702682   0.863752   1.971 0.048835 *  
+## match_duration               0.663232   0.005935 111.750  &lt; 2e-16 ***
+## higher_seed_wonTRUE          1.255531   0.879032   1.428  0.15336    
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 7.385 on 1947 degrees of freedom
-## Multiple R-squared:  0.9156, Adjusted R-squared:  0.9152 
-## F-statistic:  2112 on 10 and 1947 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 7.587 on 1947 degrees of freedom
+## Multiple R-squared:  0.9105, Adjusted R-squared:  0.9101 
+## F-statistic:  1982 on 10 and 1947 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>For now we’ll just look at the p-values, the Pr(&gt;|t|) column. We’re only concerned with variables that have a p-value &lt; .05, as that indicates that they are statistically significant predictors. Let’s create another model with only the significant predictors from our previous model.</p>
-<pre class="r"><code>train_model2 &lt;- lm(winner_total_points_won ~ winner_seed + winner_service_point_ratio + winner_break_point_ratio + winner_return_point_ratio + loser_seed + match_duration, data=train)
+<pre class="r"><code>train_model2 &lt;- lm(winner_total_points_won ~ winner_seed + winner_service_point_ratio + winner_break_point_ratio + winner_return_point_ratio + loser_seed + loser_break_point_ratio + match_duration, data=train)
 summary(train_model2)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = winner_total_points_won ~ winner_seed + winner_service_point_ratio + 
 ##     winner_break_point_ratio + winner_return_point_ratio + loser_seed + 
-##     match_duration, data = train)
+##     loser_break_point_ratio + match_duration, data = train)
 ## 
 ## Residuals:
 ##     Min      1Q  Median      3Q     Max 
-## -26.780  -4.404  -0.158   4.347  49.306 
+## -86.984  -4.346  -0.083   4.454  49.797 
 ## 
 ## Coefficients:
 ##                              Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                -29.018920   2.927022  -9.914   &lt;2e-16 ***
-## winner_seed                  0.163282   0.015745  10.371   &lt;2e-16 ***
-## winner_service_point_ratio  43.095499   2.718706  15.851   &lt;2e-16 ***
-## winner_break_point_ratio    -1.869711   0.838273  -2.230   0.0258 *  
-## winner_return_point_ratio   21.469164   2.556510   8.398   &lt;2e-16 ***
-## loser_seed                   0.145063   0.015227   9.526   &lt;2e-16 ***
-## match_duration               0.673225   0.005536 121.618   &lt;2e-16 ***
+## (Intercept)                -19.930561   3.011721  -6.618 4.70e-11 ***
+## winner_seed                  0.143239   0.015906   9.005  &lt; 2e-16 ***
+## winner_service_point_ratio  36.058434   2.850082  12.652  &lt; 2e-16 ***
+## winner_break_point_ratio    -3.333565   0.851538  -3.915 9.36e-05 ***
+## winner_return_point_ratio   16.618837   2.655119   6.259 4.75e-10 ***
+## loser_seed                   0.163656   0.015476  10.575  &lt; 2e-16 ***
+## loser_break_point_ratio     -1.631908   0.648753  -2.515    0.012 *  
+## match_duration               0.663850   0.005722 116.026  &lt; 2e-16 ***
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 7.391 on 1951 degrees of freedom
-## Multiple R-squared:  0.9153, Adjusted R-squared:  0.9151 
-## F-statistic:  3514 on 6 and 1951 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 7.587 on 1950 degrees of freedom
+## Multiple R-squared:  0.9104, Adjusted R-squared:  0.9101 
+## F-statistic:  2830 on 7 and 1950 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>All of our predictors are statistically significant, so our model is as strong as it can be. Our adjusted R-squared value is .9101, which means that roughly 91% of the variability in our data can be explained by the model.</p>
+<p>Now we will analyze and attempt to explain the relationship between each of our predictors and our dependent variable. The Estimate column is what we’re interested in. The number indicates the amount that predictor value changes as our dependent variable value increases by one unit.</p>
+<p>Winner_seed and loser_seed both increase slightly (meaning that the seed itself decreases) as winner_total_points_won increases. Generally, higher seeds are expected to win more easily than lower seeds, so higher seeds tend to need fewer points to win the match. Thus it makes sense that as the seed numbers increase, the winner tends to end up with more points.</p>
+<p>Match_duration also increases with our dependent variable, which also makes sense. Generally speaking the longer a match goes on, the more points are played, and thus the more points the winner has the opportunity to win.</p>
+<p>Winner_service_point_ratio and winner_return_point_ratio both strongly increase with the dependent variable, with service points being almost twice as potent. This indicates that having a higher ratio of points won to points played generally results in a higher total amount of points won. The exception to this would be incredibly close matches that last a long time where many points are played (and thus many points are won) but the ratio is much lower. However, our model seems to indicate that this is fairly rare.</p>
+<p>A stat that is initially confusing is that winner_break_point_ratio decreases as our dependent variable increases. This seems to indicate that a player that misses more break point opportunities generally wins more points than a player that converts quickly. However, this makes sense if you consider the significance of break points and that more points won by the winner generally means that the match was closer. A player that capitalizes quickly on break points can win the match much more quickly (having to play fewer points) than a player that has many break point opportunities but few conversions.</p>
+<p>Loser_break_point_ratio also decreases as our dependent variable increases, but this is less confusing. If the loser has many opportunities for break points but doesn’t capitalize on them, this means that the winner has to win more points to win the overall match. If the loser has a very high break point conversion rate, then they either had breaks in a set where they were already ahead or didn’t break enough times to win the match. It’s incredibly rare for a player to have a high break point conversion and still lose the match.</p>
+</div>
+<div id="testing-the-model" class="section level2">
+<h2>Testing the Model</h2>
+<pre class="r"><code>predictions &lt;- train_model2 %&gt;% predict(test)
+R2(predictions, test$winner_total_points_won)</code></pre>
+<pre><code>## [1] 0.914656</code></pre>
+<p>Our R2 value indicates that 92% of the variability in our test data can be explained by our model, which is quite high.</p>
+<pre class="r"><code>RMSE(predictions, test$winner_total_points_won)</code></pre>
+<pre><code>## [1] 7.448821</code></pre>
+<p>Our RMSE (Root Mean Squared Error) value tells us the average difference between the test values and our predicted values. This indicates that our model’s predictions for winner_total_points_won are off by an average of 7 for our test data.</p>
+<pre class="r"><code>RMSE(predictions, test$winner_total_points_won)/mean(test$winner_total_points_won)</code></pre>
+<pre><code>## [1] 0.08922058</code></pre>
+<p>Dividing the RMSE value by the mean of our dependent variable gives us the prediction error rate, which should be as small as possible. Ours is close to 0, which means that our model is quite accurate at predicting the test data.</p>
 </div>
 
 

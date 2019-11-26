@@ -32,7 +32,7 @@ Let's remind ourselves what our current data looks like.
 head(match)
 ```
 
-Each row in our table is a single match. Specifically, any match where at least 1 player was seeded. It's important to remember that a seed value of 34 means that player was unseed.
+Each row in our table is a single match. Specifically, any match where at least 1 player was seeded. It's important to remember that a seed value of 34 means that player was unseeded.
 
 ## Extra Data
 
@@ -169,7 +169,7 @@ We'll start by loading the required library and setting our seed so our analysis
 
 ```{r, warning=FALSE}
 suppressMessages(include("caret"))
-set.seed(385)
+set.seed(384)
 ```
 
 We will utilize cross validation by randomly assigning each row in our table to one of either a training set or testing set. The training set will be used to build our model and the testing set will be used to test the model.
@@ -190,8 +190,41 @@ summary(train_model)
 For now we'll just look at the p-values, the Pr(>|t|) column. We're only concerned with variables that have a p-value < .05, as that indicates that they are statistically significant predictors. Let's create another model with only the significant predictors from our previous model.
 
 ```{r}
-train_model2 <- lm(winner_total_points_won ~ winner_seed + winner_service_point_ratio + winner_break_point_ratio + winner_return_point_ratio + loser_seed + match_duration, data=train)
+train_model2 <- lm(winner_total_points_won ~ winner_seed + winner_service_point_ratio + winner_break_point_ratio + winner_return_point_ratio + loser_seed + loser_break_point_ratio + match_duration, data=train)
 summary(train_model2)
 ```
 
+All of our predictors are statistically significant, so our model is as strong as it can be. Our adjusted R-squared value is .9101, which means that roughly 91% of the variability in our data can be explained by the model.
 
+Now we will analyze and attempt to explain the relationship between each of our predictors and our dependent variable. The Estimate column is what we're interested in. The number indicates the amount that predictor value changes as our dependent variable value increases by one unit.
+
+Winner_seed and loser_seed both increase slightly (meaning that the seed itself decreases) as winner_total_points_won increases. Generally, higher seeds are expected to win more easily than lower seeds, so higher seeds tend to need fewer points to win the match. Thus it makes sense that as the seed numbers increase, the winner tends to end up with more points.
+
+Match_duration also increases with our dependent variable, which also makes sense. Generally speaking the longer a match goes on, the more points are played, and thus the more points the winner has the opportunity to win.
+
+Winner_service_point_ratio and winner_return_point_ratio both strongly increase with the dependent variable, with service points being almost twice as potent. This indicates that having a higher ratio of points won to points played generally results in a higher total amount of points won. The exception to this would be incredibly close matches that last a long time where many points are played (and thus many points are won) but the ratio is much lower. However, our model seems to indicate that this is fairly rare.
+
+A stat that is initially confusing is that winner_break_point_ratio decreases as our dependent variable increases. This seems to indicate that a player that misses more break point opportunities generally wins more points than a player that converts quickly. However, this makes sense if you consider the significance of break points and that more points won by the winner generally means that the match was closer. A player that capitalizes quickly on break points can win the match much more quickly (having to play fewer points) than a player that has many break point opportunities but few conversions.
+
+Loser_break_point_ratio also decreases as our dependent variable increases, but this is less confusing. If the loser has many opportunities for break points but doesn't capitalize on them, this means that the winner has to win more points to win the overall match. If the loser has a very high break point conversion rate, then they either had breaks in a set where they were already ahead or didn't break enough times to win the match. It's incredibly rare for a player to have a high break point conversion and still lose the match.
+
+## Testing the Model
+
+```{r}
+predictions <- train_model2 %>% predict(test)
+R2(predictions, test$winner_total_points_won)
+```
+
+Our R2 value indicates that 92% of the variability in our test data can be explained by our model, which is quite high.
+
+```{r}
+RMSE(predictions, test$winner_total_points_won)
+```
+
+Our RMSE (Root Mean Squared Error) value tells us the average difference between the test values and our predicted values. This indicates that our model's predictions for winner_total_points_won are off by an average of 7 for our test data.
+
+```{r}
+RMSE(predictions, test$winner_total_points_won)/mean(test$winner_total_points_won)
+```
+
+Dividing the RMSE value by the mean of our dependent variable gives us the prediction error rate, which should be as small as possible. Ours is close to 0, which means that our model is quite accurate at predicting the test data.
