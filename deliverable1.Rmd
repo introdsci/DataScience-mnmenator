@@ -97,7 +97,9 @@ suppressMessages(library("tidyr"))
 Each entry in the data neatly describes a single match, which is great. But because there is a lot of data that we don't care about, we will create a match table that contains only the relevant columns.
 
 ```{r}
-match <- tibble("tourney_slug"=data$tourney_slug, "tourney_round_name"=data$tourney_round_name, "winner_name"=data$winner_name, "loser_name"=data$loser_name, "winner_seed"=data$winner_seed, "loser_seed"=data$loser_seed)
+match <- tibble("tourney_slug"=data$tourney_slug, "tourney_round_name"=data$tourney_round_name,
+"match_id"=data$match_id,
+"winner_name"=data$winner_name, "loser_name"=data$loser_name, "winner_seed"=data$winner_seed, "loser_seed"=data$loser_seed)
 head(match)
 ```
 

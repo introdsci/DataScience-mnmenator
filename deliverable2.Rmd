@@ -8,9 +8,75 @@ output:
 
 ## Introduction
 
-An interesting aspect of tennis is that it's possible for the winner of the match to have won fewer total points than the loser of the match. This observation leads me to the following question: Is the ratio of points won to points lost a good predictor of the overall winner? As a predictor, how does it compare to seeding?
+An interesting aspect of tennis is that it's possible for the winner of the match to have won fewer total points than the loser of the match. This observation leads me to the following question: What is the best way to predict the total points won by the winner? Is it the total points won by the loser? Is comparing seeds a useful predictor? Or is it something else entirely?
+
+## Setup
+
+Let's start by pulling in the work we did for part 1.
+
+```{r message=FALSE, error=FALSE, warning=FALSE, results='hide'}
+include <- function(library_name){
+  if( !(library_name %in% installed.packages()) )
+    install.packages(library_name) 
+  library(library_name, character.only=TRUE)
+}
+include("tidyverse")
+include("knitr")
+purl("deliverable1.Rmd", output = "part1.r")
+source("part1.r")
+```
+
+Let's remind ourselves what our current data looks like.
+
+```{r}
+head(match)
+```
+
+Each row in our table is a single match. Specifically, any match where at least 1 player was seeded. It's important to remember that a seed value of 34 means that player was unseed.
+
+## Extra Data
+
+As far as interesting stats, our previous table only contains seeds. However, our new dataset provides much more information that might be helpful in creating a model. It is from the same source and was obtained the same way as our first dataset, the info on which you can find <a href="deliverable1.html">here.</a>
+
+## New Variables
+
+This dataset has quite a few variables that will not be relevant for our analysis, and I will not be explaining those. A lot of the variables from our initial dataset are also contained in our new data and were defined in part 1, so for the sake of brevity I will not be defining them again here. Any variable that starts with "winner" applies to the winner of the match and has an equivalent stat for the loser of the match, and I will only be explaining from the perspective of the winner.
+
+At this point in the analysis a better understanding of tennis concepts becomes more important, so I will explain some relevant information. A match is broken up into sets, a set is broken up into games, and a game is broken up into points. A player must win a certain number of points to win a game, a certain number of games to win a set, and a certain number of sets to win a match. The serving player gets to serve twice on each of their service points. A first serve is generally harder to return but is more likely to miss than a second serve. The player who is not serving is known as the returning player. A break point is when the returning player will win the game if they win the next point. The serving player is at an advantage, so generally speaking each player is expected to win their service games, which is why break points are significant.
+
+Now to define our new variables:
+
+winner_first_serves_in: The amount of successful first serves by the winning player.
+
+winner_first_serves_total: The total amount of first serves, both misses and successes, by the winning player.
+
+winner_service_points_won: The amount of points won by the winning player while serving.
+
+winner_service_points_total: The total amount of points played by the winning player while serving.
+
+winner_break_points_converted: The amount of break points won by the winning player while returning.
+
+winner_break_points_return_total: The total amount of break points played by the winning player while returning.
+
+winner_first_serve_return_won: The amount of points won by the winning player while returning their opponent's first serve.
+
+winner_first_serve_return_total: The total amount of points played by the winning player while returning their opponent's first serve.
+
+winner_second_serve_return_won: The amount of points won by the winning player while returning their opponent's second serve.
+
+winner_second_serve_return_total: The total amount of points played by the winning player while returning their opponent's second serve.
+
+winner_return_points_won: The amount of points won by the winning player while returning.
+
+winner_return_points_total: The total amount of points played by the winning player while returning.
+
+match_duration: How long the match lasted, in minutes.
 
 ```{r}
 suppressMessages(library("jsonlite"))
 stats <- fromJSON("https://pkgstore.datahub.io/sports-data/atp-world-tour-tennis-data/match_stats_2017_unindexed_json/data/2bdd108bc9cefe392847ac8cf111adc0/match_stats_2017_unindexed_json.json")
 ```
+
+
+
+
