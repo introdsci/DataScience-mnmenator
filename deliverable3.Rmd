@@ -5,6 +5,7 @@ output:
   html_document:
     df_print: paged
 ---
+<a href="index.html">Home</a>
 
 ## Introduction
 
