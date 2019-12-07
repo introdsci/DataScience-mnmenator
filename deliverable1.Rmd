@@ -209,6 +209,7 @@ The main assumption of the seeding system is that players with a lower seed shou
 
 ```{r}
 ggplot(match, aes(winner_seed<loser_seed)) + geom_bar() + labs(x="Higher Seed Beat Lower Seed", y="Number of Matches")
+sum(match$winner_seed<match$loser_seed)/nrow(match)
 ```
 
 This graph indicates that the higher seeded player wins about 2/3 of the time. This is a comfortable majority, and indicates that the seeding system generally does a good job at predicting the outcome of matches.

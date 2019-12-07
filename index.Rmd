@@ -29,5 +29,5 @@ The second deliverable builds off of the data from our first deliverable, supple
 
 ### 3. Results and Operationalization
 
-Coming soon...
+<a href="deliverable3.html">Results and Operationalization</a>
 

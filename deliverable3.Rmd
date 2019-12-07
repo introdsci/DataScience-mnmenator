@@ -1,0 +1,19 @@
+---
+title: "Results and Operationalization"
+author: "Michael Messmer"
+output:
+  html_document:
+    df_print: paged
+---
+
+## Introduction
+
+The purpose of this section is to review and revise the previous sections to address peer and instructor review as well as to discuss future directions of this project, including the implications of the insights and how to operationalize the work.
+
+## Revisions: Part 1
+
+1. Provided additional numerical proof alongside the graph that indicates that the higher seeded players wins roughly 2/3 of the time. The following line of code was added for this purpose:
+
+```{r eval=FALSE}
+sum(match$winner_seed<match$loser_seed)/nrow(match)
+```
