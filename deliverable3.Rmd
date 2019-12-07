@@ -19,6 +19,6 @@ The purpose of this section is to review and revise the previous sections to add
 sum(match$winner_seed<match$loser_seed)/nrow(match)
 ```
 
-<a href="deliverable2.html">Part 2</a>
+<a href="deliverable1.html">Part 1</a>
 
-<a href="deliverable3.html">Part 3</a>
+<a href="deliverable2.html">Part 2</a>
