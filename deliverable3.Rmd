@@ -21,6 +21,10 @@ sum(match$winner_seed<match$loser_seed)/nrow(match)
 
 2. Changed the formatting of the variable list for easier readability.
 
+3. Included links to every other page for easier navigation.
+
+4. Made graphs more aesthetically pleasing with added color and adjusted legend titles.
+
 <a href="deliverable1.html">Part 1</a>
 
 <a href="deliverable2.html">Part 2</a>

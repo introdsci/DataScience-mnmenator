@@ -219,13 +219,13 @@ Let's first make a plot to show which seeds win the most matches. Ideally, the h
 ```{r}
 suppressMessages(library(ggplot2))
 
-ggplot(match, aes(winner_seed)) + geom_histogram(bins=34)
+ggplot(match, aes(winner_seed)) + geom_histogram(color="green4", fill="lawngreen", bins=34) + labs(x="Winner Seed", y="Matches Won")
 ```
 
 Our plot indicates that most matches are won by unseeded players, which initially seems to be the opposite of what we predicted. However, it is important to note that the majority of players of any tournament are unseeded. Because of their sheer advantage in numbers, it makes sense that they would be winning the majority of matches. Let's see how the graph looks if unseeded players are not considered.
 
 ```{r}
-ggplot(filter(match, winner_seed!=34), aes(winner_seed)) + geom_histogram(bins=33)
+ggplot(filter(match, winner_seed!=34), aes(winner_seed)) + geom_histogram(color="green4", fill="lawngreen", bins=33) + labs(x="Winner Seed", y="Matches Won")
 ```
 
 This graph seems to generally support our hypothesis. As the seed number increases, the amount of wins decreases. Two interesting things to note are that seed 4 has the greatest number of wins, and that there is a distinct drop in wins after seed 8. The latter can be explained by the fact that not all tennis tournaments have the same number of seeds. The majority of tournaments have 8 seeded players, while some larger tournaments have 32 seeds. The former does not seem to have a clear explanation, but could possibly be attributed to random chance.
@@ -233,7 +233,7 @@ This graph seems to generally support our hypothesis. As the seed number increas
 The main assumption of the seeding system is that players with a lower seed should lose to players with a higher seed. Let's graph that and see what it shows.
 
 ```{r}
-ggplot(match, aes(winner_seed<loser_seed)) + geom_bar() + labs(x="Higher Seed Beat Lower Seed", y="Number of Matches")
+ggplot(match, aes(winner_seed<loser_seed)) + geom_bar(color="green4", fill="lawngreen") + labs(x="Higher Seed Beat Lower Seed", y="Number of Matches")
 sum(match$winner_seed<match$loser_seed)/nrow(match)
 ```
 
