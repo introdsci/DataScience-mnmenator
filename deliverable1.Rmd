@@ -218,3 +218,7 @@ This graph indicates that the higher seeded player wins about 2/3 of the time. T
 ## Next Steps
 
 For now, we can say that the seeding system is generally accurate. As far as other questions we might be able to answer, one area I particularly want to explore is the match scores. In tennis the value of a set is the same whether the score was 6-0 or 7-6, so I would interested in seeing the difference in games won by the winning player compared to games won by the losing player. That might indicate whether or not giving up a set once you go behind in order to save energy for later sets is a reasonable strategy.
+
+<a href="deliverable2.html">Part 2</a>
+
+<a href="deliverable3.html">Part 3</a>

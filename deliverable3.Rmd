@@ -18,3 +18,7 @@ The purpose of this section is to review and revise the previous sections to add
 ```{r eval=FALSE}
 sum(match$winner_seed<match$loser_seed)/nrow(match)
 ```
+
+<a href="deliverable2.html">Part 2</a>
+
+<a href="deliverable3.html">Part 3</a>
