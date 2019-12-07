@@ -21,53 +21,77 @@ I initially discovered the data I will be using on https://datahub.io/sports-dat
 
 ## Variables
 
-tourney_year_id: The year that the tournament took place, followed by the tournament's numeric ID. The year will be 2017 for all of our entries, as that is the year the data was pulled from. Stored in the format year-id
+* **tourney_year_id**  
+  The year that the tournament took place, followed by the tournament's numeric ID. The year will be 2017 for all of our entries, as that is the year the data was pulled from. Stored in the format year-id
 
-tourney_order: Indicates the order that the tournaments took place in. Brisbane was the first tournament of 2017, followed by Chennai, and so on and so forth, ending with the Nitto ATP Finals as the 67th and last tournament of 2017. A value of x means that it was the xth tournament of the year.
+* **tourney_order**  
+  Indicates the order that the tournaments took place in. Brisbane was the first tournament of 2017, followed by Chennai, and so on and so forth, ending with the Nitto ATP Finals as the 67th and last tournament of 2017. A value of x means that it was the xth tournament of the year.
 
-tourney_slug: The name of the tournament in slug form (no spaces, no capitalization, no special characters).
+* **tourney_slug**  
+  The name of the tournament in slug form (no spaces, no capitalization, no special characters).
 
-tourney_url_suffix: The URL to be appended to "atptour.com" to find the scores for the tournament.
+* **tourney_url_suffix**  
+  The URL to be appended to "atptour.com" to find the scores for the tournament.
 
-tourney_round_name: Indicates the round of the tournament that the match took place. "Finals", "Semi-Finals", "Round of 16", etc.
+* **tourney_round_name**  
+  Indicates the round of the tournament that the match took place. "Finals", "Semi-Finals", "Round of 16", etc.
 
-round_order: Indicates the order of the rounds. A smaller round_order indicates that the round took place later in the tournament.
+* **round_order**  
+  Indicates the order of the rounds. A smaller round_order indicates that the round took place later in the tournament.
 
-match_order: Indicates the order of the matches within each round. A value of x means that it was the xth match of its round.
+* **match_order**  
+  Indicates the order of the matches within each round. A value of x means that it was the xth match of its round.
 
-winner_name: The name of the player that won the match.
+* **winner_name**  
+  The name of the player that won the match.
 
-winner_player_id: The unique ID of the winning player. A combination of characters and digits.
+* **winner_player_id**  
+  The unique ID of the winning player. A combination of characters and digits.
 
-winner_slug: The name of the winning player in slug form.
+* **winner_slug**  
+  The name of the winning player in slug form.
 
-loser_name: The name of the player that lost the match.
+* **loser_name**  
+  The name of the player that lost the match.
 
-loser_player_id: The unique ID of the losing player.
+* **loser_player_id**  
+  The unique ID of the losing player.
 
-loser_slug: The name of the losing player in slug form.
+* **loser_slug**  
+  The name of the losing player in slug form.
 
-winner_seed: The seed value of the winning player. A player with a smaller seed number is expected to beat any players with greater seed numbers.
+* **winner_seed**  
+  The seed value of the winning player. A player with a smaller seed number is expected to beat any players with greater seed numbers.
 
-loser_seed: The seed value of the losing player.
+* **loser_seed**  
+  The seed value of the losing player.
 
-match_score_tiebreaks: The final score of the match. The scoring system in tennis is somewhat complicated, and seeing this data is not currently relevant to our analysis, we will forgo a more detailed explanation.
+* **match_score_tiebreaks**  
+  The final score of the match. The scoring system in tennis is somewhat complicated, and seeing this data is not currently relevant to our analysis, we will forgo a more detailed explanation.
 
-winner_sets_won: The amount of sets won by the player that won the match.
+* **winner_sets_won**  
+  The amount of sets won by the player that won the match.
 
-loser_sets_won: The amount of sets won by the player that lost the match.
+* **loser_sets_won**  
+  The amount of sets won by the player that lost the match.
 
-winner_games_won: The amount of games won by the player that won the match.
+* **winner_games_won**  
+  The amount of games won by the player that won the match.
 
-loser_games_won: The amount of games won by the player that lost the match.
+* **loser_games_won**  
+  The amount of games won by the player that lost the match.
 
-winner_tiebreaks_won: The amount of tiebreaks won by the player that won the match.
+* **winner_tiebreaks_won**  
+  The amount of tiebreaks won by the player that won the match.
 
-loser_tiebreaks_won: The amount of tiebreaks won by the player that lost the match.
+* **loser_tiebreaks_won**  
+  The amount of tiebreaks won by the player that lost the match.
 
-match_id: The unique ID for the match. Stored in the format year-tourney_id-winner_player_id-loser_player_id
+* **match_id**  
+  The unique ID for the match. Stored in the format year-tourney_id-winner_player_id-loser_player_id
 
-match_stats_ur_suffix: The URL to be appended to "atptour.com" to find detailed stats for the match.
+* **match_stats_ur_suffix**  
+  The URL to be appended to "atptour.com" to find detailed stats for the match.
 
 ## Tidying the Data
 

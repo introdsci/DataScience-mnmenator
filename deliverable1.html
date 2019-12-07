@@ -1654,30 +1654,56 @@ summary {
 </div>
 <div id="variables" class="section level2">
 <h2>Variables</h2>
-<p>tourney_year_id: The year that the tournament took place, followed by the tournament’s numeric ID. The year will be 2017 for all of our entries, as that is the year the data was pulled from. Stored in the format year-id</p>
-<p>tourney_order: Indicates the order that the tournaments took place in. Brisbane was the first tournament of 2017, followed by Chennai, and so on and so forth, ending with the Nitto ATP Finals as the 67th and last tournament of 2017. A value of x means that it was the xth tournament of the year.</p>
-<p>tourney_slug: The name of the tournament in slug form (no spaces, no capitalization, no special characters).</p>
-<p>tourney_url_suffix: The URL to be appended to “atptour.com” to find the scores for the tournament.</p>
-<p>tourney_round_name: Indicates the round of the tournament that the match took place. “Finals”, “Semi-Finals”, “Round of 16”, etc.</p>
-<p>round_order: Indicates the order of the rounds. A smaller round_order indicates that the round took place later in the tournament.</p>
-<p>match_order: Indicates the order of the matches within each round. A value of x means that it was the xth match of its round.</p>
-<p>winner_name: The name of the player that won the match.</p>
-<p>winner_player_id: The unique ID of the winning player. A combination of characters and digits.</p>
-<p>winner_slug: The name of the winning player in slug form.</p>
-<p>loser_name: The name of the player that lost the match.</p>
-<p>loser_player_id: The unique ID of the losing player.</p>
-<p>loser_slug: The name of the losing player in slug form.</p>
-<p>winner_seed: The seed value of the winning player. A player with a smaller seed number is expected to beat any players with greater seed numbers.</p>
-<p>loser_seed: The seed value of the losing player.</p>
-<p>match_score_tiebreaks: The final score of the match. The scoring system in tennis is somewhat complicated, and seeing this data is not currently relevant to our analysis, we will forgo a more detailed explanation.</p>
-<p>winner_sets_won: The amount of sets won by the player that won the match.</p>
-<p>loser_sets_won: The amount of sets won by the player that lost the match.</p>
-<p>winner_games_won: The amount of games won by the player that won the match.</p>
-<p>loser_games_won: The amount of games won by the player that lost the match.</p>
-<p>winner_tiebreaks_won: The amount of tiebreaks won by the player that won the match.</p>
-<p>loser_tiebreaks_won: The amount of tiebreaks won by the player that lost the match.</p>
-<p>match_id: The unique ID for the match. Stored in the format year-tourney_id-winner_player_id-loser_player_id</p>
-<p>match_stats_ur_suffix: The URL to be appended to “atptour.com” to find detailed stats for the match.</p>
+<ul>
+<li><p><strong>tourney_year_id</strong><br />
+The year that the tournament took place, followed by the tournament’s numeric ID. The year will be 2017 for all of our entries, as that is the year the data was pulled from. Stored in the format year-id</p></li>
+<li><p><strong>tourney_order</strong><br />
+Indicates the order that the tournaments took place in. Brisbane was the first tournament of 2017, followed by Chennai, and so on and so forth, ending with the Nitto ATP Finals as the 67th and last tournament of 2017. A value of x means that it was the xth tournament of the year.</p></li>
+<li><p><strong>tourney_slug</strong><br />
+The name of the tournament in slug form (no spaces, no capitalization, no special characters).</p></li>
+<li><p><strong>tourney_url_suffix</strong><br />
+The URL to be appended to “atptour.com” to find the scores for the tournament.</p></li>
+<li><p><strong>tourney_round_name</strong><br />
+Indicates the round of the tournament that the match took place. “Finals”, “Semi-Finals”, “Round of 16”, etc.</p></li>
+<li><p><strong>round_order</strong><br />
+Indicates the order of the rounds. A smaller round_order indicates that the round took place later in the tournament.</p></li>
+<li><p><strong>match_order</strong><br />
+Indicates the order of the matches within each round. A value of x means that it was the xth match of its round.</p></li>
+<li><p><strong>winner_name</strong><br />
+The name of the player that won the match.</p></li>
+<li><p><strong>winner_player_id</strong><br />
+The unique ID of the winning player. A combination of characters and digits.</p></li>
+<li><p><strong>winner_slug</strong><br />
+The name of the winning player in slug form.</p></li>
+<li><p><strong>loser_name</strong><br />
+The name of the player that lost the match.</p></li>
+<li><p><strong>loser_player_id</strong><br />
+The unique ID of the losing player.</p></li>
+<li><p><strong>loser_slug</strong><br />
+The name of the losing player in slug form.</p></li>
+<li><p><strong>winner_seed</strong><br />
+The seed value of the winning player. A player with a smaller seed number is expected to beat any players with greater seed numbers.</p></li>
+<li><p><strong>loser_seed</strong><br />
+The seed value of the losing player.</p></li>
+<li><p><strong>match_score_tiebreaks</strong><br />
+The final score of the match. The scoring system in tennis is somewhat complicated, and seeing this data is not currently relevant to our analysis, we will forgo a more detailed explanation.</p></li>
+<li><p><strong>winner_sets_won</strong><br />
+The amount of sets won by the player that won the match.</p></li>
+<li><p><strong>loser_sets_won</strong><br />
+The amount of sets won by the player that lost the match.</p></li>
+<li><p><strong>winner_games_won</strong><br />
+The amount of games won by the player that won the match.</p></li>
+<li><p><strong>loser_games_won</strong><br />
+The amount of games won by the player that lost the match.</p></li>
+<li><p><strong>winner_tiebreaks_won</strong><br />
+The amount of tiebreaks won by the player that won the match.</p></li>
+<li><p><strong>loser_tiebreaks_won</strong><br />
+The amount of tiebreaks won by the player that lost the match.</p></li>
+<li><p><strong>match_id</strong><br />
+The unique ID for the match. Stored in the format year-tourney_id-winner_player_id-loser_player_id</p></li>
+<li><p><strong>match_stats_ur_suffix</strong><br />
+The URL to be appended to “atptour.com” to find detailed stats for the match.</p></li>
+</ul>
 </div>
 <div id="tidying-the-data" class="section level2">
 <h2>Tidying the Data</h2>
