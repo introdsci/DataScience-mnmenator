@@ -25,6 +25,14 @@ sum(match$winner_seed<match$loser_seed)/nrow(match)
 
 4. Made graphs more aesthetically pleasing with added color and adjusted legend titles.
 
+## Operationalization (or lack thereof)
+
+The insights from this project seem to indicate that operationalization is either not necessary or not really possible.
+
+Part 1 showed that while the current seeding system is not perfect, it is certainly good enough, so there is no real need to pursue any sort of change to the system.
+
+The predictions from Part 2 have to do with post-game stats and while some of the conclusions are interesting, they don't indicate a necessity or avenue for change.
+
 <a href="deliverable1.html">Part 1</a>
 
 <a href="deliverable2.html">Part 2</a>
