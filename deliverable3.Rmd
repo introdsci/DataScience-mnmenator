@@ -25,6 +25,19 @@ sum(match$winner_seed<match$loser_seed)/nrow(match)
 
 4. Made graphs more aesthetically pleasing with added color and adjusted legend titles.
 
+## Cross-Validation
+
+We used cross-validation on our model in Part 2, but here are the relevant values.
+
+**R2**: 0.915  
+Roughly 91.5% of the variability in our test data can be explained by our model, which is quite high.
+
+**RMSE**: 7.449  
+Our model's predictions for winner_points_won were off by an average of 7.5
+
+**RMSE/mean**: 0.089  
+Our prediction error rate is very close to 0, which indicates that the model is quite accurate at predicting the test data.
+
 ## Operationalization (or lack thereof)
 
 The insights from this project seem to indicate that operationalization is either not necessary or not really possible.
