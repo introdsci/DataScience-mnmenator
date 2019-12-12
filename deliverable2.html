@@ -1674,15 +1674,26 @@ source(&quot;part1.r&quot;)</code></pre>
 <p>This dataset has quite a few variables that will not be relevant for our analysis, and I will not be explaining those. A lot of the variables from our initial dataset are also contained in our new data and were defined in part 1, so for the sake of brevity I will not be defining them again here. Any variable that starts with “winner” applies to the winner of the match and has an equivalent stat for the loser of the match, and I will only be explaining from the perspective of the winner.</p>
 <p>At this point in the analysis a better understanding of tennis concepts becomes more important, so I will explain some relevant information. A match is broken up into sets, a set is broken up into games, and a game is broken up into points. A player must win a certain number of points to win a game, a certain number of games to win a set, and a certain number of sets to win a match. The serving player gets to serve twice on each of their service points. A first serve is generally harder to return but is more likely to miss than a second serve. The player who is not serving is known as the returning player. A break point is when the returning player will win the game if they win the next point. The serving player is at an advantage, so generally speaking each player is expected to win their service games, which is why break points are significant.</p>
 <p>Now to define our new variables:</p>
-<p>winner_service_points_won: The amount of points won by the winning player while serving.</p>
-<p>winner_service_points_total: The total amount of points played by the winning player while serving.</p>
-<p>winner_break_points_converted: The amount of break points won by the winning player while returning.</p>
-<p>winner_break_points_return_total: The total amount of break points played by the winning player while returning.</p>
-<p>winner_return_points_won: The amount of points won by the winning player while returning.</p>
-<p>winner_return_points_total: The total amount of points played by the winning player while returning.</p>
-<p>winner_total_points_won: The total amount of points won by the winning player.</p>
-<p>winner_total_points_total: The total amount of points played by both players, since both the winner and loser must play the same amount of points.</p>
-<p>match_duration: How long the match lasted, in minutes.</p>
+<ul>
+<li><p><strong>winner_service_points_won</strong><br />
+The amount of points won by the winning player while serving.</p></li>
+<li><p><strong>winner_service_points_total</strong><br />
+The total amount of points played by the winning player while serving.</p></li>
+<li><p><strong>winner_break_points_converted</strong><br />
+The amount of break points won by the winning player while returning.</p></li>
+<li><p><strong>winner_break_points_return_total</strong><br />
+The total amount of break points played by the winning player while returning.</p></li>
+<li><p><strong>winner_return_points_won</strong><br />
+The amount of points won by the winning player while returning.</p></li>
+<li><p><strong>winner_return_points_total</strong><br />
+The total amount of points played by the winning player while returning.</p></li>
+<li><p><strong>winner_total_points_won</strong><br />
+The total amount of points won by the winning player.</p></li>
+<li><p><strong>winner_total_points_total</strong><br />
+The total amount of points played by both players, since both the winner and loser must play the same amount of points.</p></li>
+<li><p><strong>match_duration</strong><br />
+How long the match lasted, in minutes.</p></li>
+</ul>
 </div>
 <div id="tidying-the-data" class="section level2">
 <h2>Tidying the Data</h2>

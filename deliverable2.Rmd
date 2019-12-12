@@ -47,23 +47,32 @@ At this point in the analysis a better understanding of tennis concepts becomes 
 
 Now to define our new variables:
 
-winner_service_points_won: The amount of points won by the winning player while serving.
+* **winner_service_points_won**  
+The amount of points won by the winning player while serving.
 
-winner_service_points_total: The total amount of points played by the winning player while serving.
+* **winner_service_points_total**  
+The total amount of points played by the winning player while serving.
 
-winner_break_points_converted: The amount of break points won by the winning player while returning.
+* **winner_break_points_converted**  
+The amount of break points won by the winning player while returning.
 
-winner_break_points_return_total: The total amount of break points played by the winning player while returning.
+* **winner_break_points_return_total**  
+The total amount of break points played by the winning player while returning.
 
-winner_return_points_won: The amount of points won by the winning player while returning.
+* **winner_return_points_won**  
+The amount of points won by the winning player while returning.
 
-winner_return_points_total: The total amount of points played by the winning player while returning.
+* **winner_return_points_total**  
+The total amount of points played by the winning player while returning.
 
-winner_total_points_won: The total amount of points won by the winning player.
+* **winner_total_points_won**  
+The total amount of points won by the winning player.
 
-winner_total_points_total: The total amount of points played by both players, since both the winner and loser must play the same amount of points.
+* **winner_total_points_total**  
+The total amount of points played by both players, since both the winner and loser must play the same amount of points.
 
-match_duration: How long the match lasted, in minutes.
+* **match_duration**  
+How long the match lasted, in minutes.
 
 ## Tidying the Data
 

@@ -29,7 +29,9 @@ sum(match$winner_seed<match$loser_seed)/nrow(match)
 
 1. Added tourney_slug to final table to make adding court surface data easier.
 
-2. Included links to every other page for easier navigation.
+2. Changed the formatting of the variable list for easier readability.
+
+3. Included links to every other page for easier navigation.
 
 ## Cross-Validation
 
