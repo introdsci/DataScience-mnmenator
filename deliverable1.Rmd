@@ -97,7 +97,7 @@ I initially discovered the data I will be using on https://datahub.io/sports-dat
 
 First, we need to install the tidyverse library so we can import and manipulate our data.
 
-```{r, results='hide', warning=FALSE}
+```{r name1, results='hide', warning=FALSE}
 suppressMessages(install.packages("tidyverse", repos = "http://cran.us.r-project.org"))
 suppressMessages(library("tidyverse"))
 
@@ -106,7 +106,7 @@ suppressMessages(data <- read_csv("https://raw.githubusercontent.com/datasets/at
 
 Let's take a look at the column names and make sure they're all suitable.
 
-```{r}
+```{r name2}
 colnames(data)
 ```
 
@@ -114,14 +114,14 @@ These names look quite good. They have consistent syntax, they're all unambiguou
 
 That being said, much of this data is irrelevant for our studies. For example, tourney_order has nothing to do with seeding, and we probably don't need both player names and player ids. Let's load some libraries for tidying the data.
 
-```{r}
+```{r name3}
 suppressMessages(library("dplyr"))
 suppressMessages(library("tidyr"))
 ```
 
 Each entry in the data neatly describes a single match, which is great. But because there is a lot of data that we don't care about, we will create a match table that contains only the relevant columns.
 
-```{r}
+```{r name4}
 match <- tibble("tourney_slug"=data$tourney_slug, "tourney_round_name"=data$tourney_round_name,
 "match_id"=data$match_id,
 "winner_name"=data$winner_name, "loser_name"=data$loser_name, "winner_seed"=data$winner_seed, "loser_seed"=data$loser_seed)
@@ -130,14 +130,14 @@ head(match)
 
 That looks much better. One thing to notice is that our seeds have been encoded as characters rather than as numbers. Looking at the loser_seed of the last 2 rows gives us some insight as to why, as well as showing a few other issues. Players that aren't seeded are given a value of NA, which can't be directly compared with our numerical seeds. There is also another seed that isn't a numeric value, WC. Let's take a closer look at our seed values.
 
-```{r}
+```{r name5}
 levels(as.factor(match$winner_seed))
 levels(as.factor(match$loser_seed))
 ```
 
 We can see that some seeds are indeed character values, such as WC and AL. WC is what's known as a wild card in tennis. The distinction between a seeded player with or without a wild card is not relevant to our analysis, so we will treat them as equivalent. In order to do this, let's change their values to be the same as normal numeric seeds.
 
-```{r}
+```{r name6}
 match$winner_seed[match$winner_seed == "1 AL"] <- "1"
 match$winner_seed[match$winner_seed == "1 WC"] <- "1"
 match$winner_seed[match$winner_seed == "14 WC"] <- "14"
@@ -161,7 +161,7 @@ match$loser_seed[match$loser_seed == "8 WC"] <- "8"
 
 The distinctions between the rest of the non-numeric seeds are also not relevant to our analysis. They can all be treated as equivalent and less than any numeric seed. For now, we'll give them a numeric value that is greater than any numeric seed, to indicate that they are expected to lose to normal seeds.
 
-```{r}
+```{r name7}
 match$winner_seed[match$winner_seed == "AL"] <- "34"
 match$winner_seed[match$winner_seed == "LL"] <- "34"
 match$winner_seed[match$winner_seed == "PR"] <- "34"
@@ -182,14 +182,14 @@ levels(as.factor(match$loser_seed))
 
 This looks much better, all of our seeds are numeric now. However, they are still encoded as characters, which means they cannot be properly compared in some cases.
 
-```{r}
+```{r name8}
 18 < 2
 "18" < "2"
 ```
 
 In order to ensure that we can properly compare seeds, we must make sure they are encoded as numbers rather than characters.
 
-```{r}
+```{r name9}
 match$winner_seed <- as.numeric(match$winner_seed)
 match$loser_seed <- as.numeric(match$loser_seed)
 
@@ -199,14 +199,14 @@ typeof(match$loser_seed)
 
 Next we should address the NA problem. We have no way of comparing nonseeded players directly to each other, so for the sake of this analysis, we will assign them the same number that our non-numeric seeds were given, to indicate that they are expected to lose to any seeded player.
 
-```{r}
+```{r name10}
 match$winner_seed[is.na(match$winner_seed)] <- 34
 match$loser_seed[is.na(match$loser_seed)] <- 34
 ```
 
 In fact, since we can't obtain any useful insight from matches between two unseeded players, let's just remove these matches from our table entirely.
 
-```{r}
+```{r name11}
 match <- filter(match, (winner_seed != 34 | loser_seed != 34))
 ```
 
@@ -216,7 +216,7 @@ Now we are just left with matches between 2 players of different seed levels. Le
 
 Let's first make a plot to show which seeds win the most matches. Ideally, the highest seeds should be winning the most matches.
 
-```{r}
+```{r name12}
 suppressMessages(library(ggplot2))
 
 ggplot(match, aes(winner_seed)) + geom_histogram(color="green4", fill="lawngreen", bins=34) + labs(x="Winner Seed", y="Matches Won")
@@ -224,7 +224,7 @@ ggplot(match, aes(winner_seed)) + geom_histogram(color="green4", fill="lawngreen
 
 Our plot indicates that most matches are won by unseeded players, which initially seems to be the opposite of what we predicted. However, it is important to note that the majority of players of any tournament are unseeded. Because of their sheer advantage in numbers, it makes sense that they would be winning the majority of matches. Let's see how the graph looks if unseeded players are not considered.
 
-```{r}
+```{r name13}
 ggplot(filter(match, winner_seed!=34), aes(winner_seed)) + geom_histogram(color="green4", fill="lawngreen", bins=33) + labs(x="Winner Seed", y="Matches Won")
 ```
 
@@ -232,7 +232,7 @@ This graph seems to generally support our hypothesis. As the seed number increas
 
 The main assumption of the seeding system is that players with a lower seed should lose to players with a higher seed. Let's graph that and see what it shows.
 
-```{r}
+```{r name14}
 ggplot(match, aes(winner_seed<loser_seed)) + geom_bar(color="green4", fill="lawngreen") + labs(x="Higher Seed Beat Lower Seed", y="Number of Matches")
 sum(match$winner_seed<match$loser_seed)/nrow(match)
 ```

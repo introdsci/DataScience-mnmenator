@@ -1656,6 +1656,29 @@ summary {
 <li><p>Made graphs more aesthetically pleasing with added color and adjusted legend titles.</p></li>
 </ol>
 </div>
+<div id="revisions-part-2" class="section level2">
+<h2>Revisions: Part 2</h2>
+<ol style="list-style-type: decimal">
+<li>Added tourney_slug to final table to make adding court surface data easier.</li>
+</ol>
+</div>
+<div id="extra-data" class="section level2">
+<h2>Extra Data</h2>
+<p>A fellow student gave me some feedback regarding the model from Part 2, saying that it would be interesting to see if the court surface might be a good predictor. There might be datasets out there that include the court surface for each tournament, but I compiled the following lists myself after 30 minutes of Googling.</p>
+<pre class="r"><code>hard_tournaments = c(&quot;brisbane&quot;, &quot;chennai&quot;, &quot;doha&quot;, &quot;sydney&quot;, &quot;auckland&quot;, &quot;australian-open&quot;, &quot;montpellier&quot;, &quot;sofia&quot;, &quot;memphis&quot;, &quot;rotterdam&quot;, &quot;delray-beach&quot;, &quot;marseille&quot;, &quot;acapulco&quot;, &quot;dubai&quot;, &quot;indian-wells&quot;, &quot;miami&quot;, &quot;atlanta&quot;, &quot;los-cabos&quot;, &quot;washington&quot;, &quot;montreal&quot;, &quot;cincinnati&quot;, &quot;winston-salem&quot;, &quot;us-open&quot;, &quot;metz&quot;, &quot;st-petersburg&quot;, &quot;chengdu&quot;, &quot;shenzhen&quot;, &quot;beijing&quot;, &quot;tokyo&quot;, &quot;shanghai&quot;, &quot;antwerp&quot;, &quot;moscow&quot;, &quot;stockholm&quot;, &quot;basel&quot;, &quot;vienna&quot;, &quot;paris&quot;, &quot;nitto-atp-finals&quot;)
+grass_tournaments = c(&quot;s-hertogenbosch&quot;, &quot;stuttgart&quot;, &quot;halle&quot;, &quot;london&quot;, &quot;antalya&quot;, &quot;eastbourne&quot;, &quot;wimbledon&quot;, &quot;newport&quot;)
+clay_tournaments = c(&quot;quito&quot;, &quot;buenos-aires&quot;, &quot;rio-de-janeiro&quot;, &quot;sao-paulo&quot;, &quot;houston&quot;, &quot;marrakech&quot;, &quot;monte-carlo&quot;, &quot;barcelona&quot;, &quot;budapest&quot;, &quot;estoril&quot;, &quot;istanbul&quot;, &quot;munich&quot;, &quot;madrid&quot;, &quot;rome&quot;, &quot;geneva&quot;, &quot;lyon&quot;, &quot;roland-garros&quot;, &quot;bastad&quot;, &quot;umag&quot;, &quot;gstaad&quot;, &quot;hamburg&quot;, &quot;kitzbuhel&quot;)</code></pre>
+<p>Now let’s load our data from Part 2.</p>
+<pre class="r"><code>include &lt;- function(library_name){
+  if( !(library_name %in% installed.packages()) )
+    install.packages(library_name) 
+  library(library_name, character.only=TRUE)
+}
+include(&quot;tidyverse&quot;)
+include(&quot;knitr&quot;)
+purl(&quot;deliverable2.Rmd&quot;, output = &quot;part2.r&quot;)
+source(&quot;part2.r&quot;)</code></pre>
+</div>
 <div id="cross-validation" class="section level2">
 <h2>Cross-Validation</h2>
 <p>We used cross-validation on our model in Part 2, but here are the relevant values.</p>

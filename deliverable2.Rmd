@@ -116,7 +116,7 @@ There is no missing data in our new table, which is great. All of our data is en
 Let's start by filtering out unnecessary info from our first table.
 
 ```{r}
-match <- select(match, c(match_id, winner_seed, loser_seed))
+match <- select(match, c(tourney_slug, match_id, winner_seed, loser_seed))
 ```
 
 Now we'll create a new table that combines our data.
@@ -130,6 +130,7 @@ Before we create our model, we want to adjust the data to be more fit for linear
 
 ```{r}
 ratios <- tibble(
+  "tourney_slug"=combined$tourney_slug,
   "match_id"=combined$match_id,
   "winner_total_points_won"=combined$winner_total_points_won,
   "winner_seed"=combined$winner_seed,
@@ -184,7 +185,7 @@ test <- ratios[-sample_selection, ]
 Now we will build a linear model and perform multiple linear regression on our model. We will use winner_total_points_won as our dependent variable, as that is the variable we want to be able to predict. Each match has a unique match id, so it makes little sense to include it as a possible predictor. We will check all other variables.
 
 ```{r}
-train_model <- lm(winner_total_points_won ~ . - match_id, data=train)
+train_model <- lm(winner_total_points_won ~ . - match_id - tourney_slug, data=train)
 summary(train_model)
 ```
 
@@ -216,13 +217,13 @@ predictions <- train_model2 %>% predict(test)
 R2(predictions, test$winner_total_points_won)
 ```
 
-Our R2 value indicates that 92% of the variability in our test data can be explained by our model, which is quite high.
+Our R2 value indicates that 91.5% of the variability in our test data can be explained by our model, which is quite high.
 
 ```{r}
 RMSE(predictions, test$winner_total_points_won)
 ```
 
-Our RMSE (Root Mean Squared Error) value tells us the average difference between the test values and our predicted values. This indicates that our model's predictions for winner_total_points_won are off by an average of 7 for our test data.
+Our RMSE (Root Mean Squared Error) value tells us the average difference between the test values and our predicted values. This indicates that our model's predictions for winner_total_points_won are off by an average of 7.4 for our test data.
 
 ```{r}
 RMSE(predictions, test$winner_total_points_won)/mean(test$winner_total_points_won)

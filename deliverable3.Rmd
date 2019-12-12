@@ -25,6 +25,34 @@ sum(match$winner_seed<match$loser_seed)/nrow(match)
 
 4. Made graphs more aesthetically pleasing with added color and adjusted legend titles.
 
+## Revisions: Part 2
+
+1. Added tourney_slug to final table to make adding court surface data easier.
+
+## Extra Data
+
+A fellow student gave me some feedback regarding the model from Part 2, saying that it would be interesting to see if the court surface might be a good predictor. There might be datasets out there that include the court surface for each tournament, but I compiled the following lists myself after 30 minutes of Googling.
+
+```{r}
+hard_tournaments = c("brisbane", "chennai", "doha", "sydney", "auckland", "australian-open", "montpellier", "sofia", "memphis", "rotterdam", "delray-beach", "marseille", "acapulco", "dubai", "indian-wells", "miami", "atlanta", "los-cabos", "washington", "montreal", "cincinnati", "winston-salem", "us-open", "metz", "st-petersburg", "chengdu", "shenzhen", "beijing", "tokyo", "shanghai", "antwerp", "moscow", "stockholm", "basel", "vienna", "paris", "nitto-atp-finals")
+grass_tournaments = c("s-hertogenbosch", "stuttgart", "halle", "london", "antalya", "eastbourne", "wimbledon", "newport")
+clay_tournaments = c("quito", "buenos-aires", "rio-de-janeiro", "sao-paulo", "houston", "marrakech", "monte-carlo", "barcelona", "budapest", "estoril", "istanbul", "munich", "madrid", "rome", "geneva", "lyon", "roland-garros", "bastad", "umag", "gstaad", "hamburg", "kitzbuhel")
+```
+
+Now let's load our data from Part 2.
+
+```{r message=FALSE, error=FALSE, warning=FALSE, results='hide'}
+include <- function(library_name){
+  if( !(library_name %in% installed.packages()) )
+    install.packages(library_name) 
+  library(library_name, character.only=TRUE)
+}
+include("tidyverse")
+include("knitr")
+purl("deliverable2.Rmd", output = "part2.r")
+source("part2.r")
+```
+
 ## Cross-Validation
 
 We used cross-validation on our model in Part 2, but here are the relevant values.
