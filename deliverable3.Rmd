@@ -29,6 +29,21 @@ sum(match$winner_seed<match$loser_seed)/nrow(match)
 
 1. Added tourney_slug to final table to make adding court surface data easier.
 
+2. Included links to every other page for easier navigation.
+
+## Cross-Validation
+
+We used cross-validation on our model in Part 2, but here are the relevant values.
+
+**R2**: 0.915  
+Roughly 91.5% of the variability in our test data can be explained by our model, which is quite high.
+
+**RMSE**: 7.449  
+Our model's predictions for winner_points_won were off by an average of 7.5
+
+**RMSE/mean**: 0.089  
+Our prediction error rate is very close to 0, which indicates that the model is quite accurate at predicting the test data.
+
 ## Extra Data
 
 A fellow student gave me some feedback regarding the model from Part 2, saying that it would be interesting to see if the court surface might be a good predictor. There might be datasets out there that include the court surface for each tournament, but I compiled the following lists myself after 30 minutes of Googling.
@@ -53,18 +68,70 @@ purl("deliverable2.Rmd", output = "part2.r")
 source("part2.r")
 ```
 
-## Cross-Validation
+Let's add the court surfaces to our table.
 
-We used cross-validation on our model in Part 2, but here are the relevant values.
+```{r}
+ratios$surface <- ""
 
-**R2**: 0.915  
-Roughly 91.5% of the variability in our test data can be explained by our model, which is quite high.
+for(tournament in hard_tournaments){
+  ratios$surface[ratios$tourney_slug == tournament] <- "hard"
+}
 
-**RMSE**: 7.449  
-Our model's predictions for winner_points_won were off by an average of 7.5
+for(tournament in clay_tournaments){
+  ratios$surface[ratios$tourney_slug == tournament] <- "clay"
+}
 
-**RMSE/mean**: 0.089  
-Our prediction error rate is very close to 0, which indicates that the model is quite accurate at predicting the test data.
+for(tournament in grass_tournaments){
+  ratios$surface[ratios$tourney_slug == tournament] <- "grass"
+}
+```
+
+Right now the surface data is encoded as a string by default, let's factorize it to make it more fit for the model.
+
+```{r}
+ratios$surface <- as.factor(ratios$surface)
+head(ratios)
+```
+
+Now that we've properly added the surface data to our table, let's go through the model building process again and see if surface is a good predictor.
+
+```{r}
+train <- ratios[sample_selection, ]
+test <- ratios[-sample_selection, ]
+train_model <- lm(winner_total_points_won ~ winner_seed + winner_service_point_ratio + winner_break_point_ratio + winner_return_point_ratio + loser_seed + loser_break_point_ratio + match_duration + surface, data=train)
+summary(train_model)
+```
+
+The p-values for surface are less than .05, so it looks like the surface is a statistically significant predictor of winner_total_points_won. Let's see if we can make sense of the values.
+
+Because surface is a categorical variable, the estimate values are relative to the default level, which in this case is clay. This means that when compared to clay courts, the winner has to win more points to win the overall match on hard and grass courts, over doubly so for grass. This seems to indicate that matches played on grass courts tend to be closer than hard, with both being closer than clay.
+
+A possible explanation for grass having the closest matches is that grass courts favor big serves much more than other courts. This means that players tend to win their service games even more decisively than normal, leading to long matches that usually go to tiebreaks.
+
+The majority of tournaments are played on hard court, so most players are most familiar with that surface. Hard courts are essentially the middle ground between grass and clay in terms of court conditions, so it makes sense that it is the middle ground for our model.
+
+Clay is a very polarizing surface. In contrast to hard, many players either excel at playing on clay or play much worse on clay than on the other surfaces. This would lead to more blowout matches where the winner didn't need as many points.
+
+## Testing the New Model
+
+```{r}
+predictions <- train_model %>% predict(test)
+R2(predictions, test$winner_total_points_won)
+```
+
+Our new model explains slightly more of the variability in our test data than our old model, going from 91.5% to 92.3%, which means that adding the surface data was an improvement.
+
+```{r}
+RMSE(predictions, test$winner_total_points_won)
+```
+
+Our RMSE value has improved as well. The model's average error is down to 7.1 from 7.4, meaning that our model's predictions are more accurate.
+
+```{r}
+RMSE(predictions, test$winner_total_points_won)/mean(test$winner_total_points_won)
+```
+
+Our prediction error rate is also down to 0.084 from 0.089. All of our metrics support that the surface type is a statistically significant predictor of winner_total_points_won.
 
 ## Operationalization (or lack thereof)
 

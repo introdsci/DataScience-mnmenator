@@ -1659,8 +1659,19 @@ summary {
 <div id="revisions-part-2" class="section level2">
 <h2>Revisions: Part 2</h2>
 <ol style="list-style-type: decimal">
-<li>Added tourney_slug to final table to make adding court surface data easier.</li>
+<li><p>Added tourney_slug to final table to make adding court surface data easier.</p></li>
+<li><p>Included links to every other page for easier navigation.</p></li>
 </ol>
+</div>
+<div id="cross-validation" class="section level2">
+<h2>Cross-Validation</h2>
+<p>We used cross-validation on our model in Part 2, but here are the relevant values.</p>
+<p><strong>R2</strong>: 0.915<br />
+Roughly 91.5% of the variability in our test data can be explained by our model, which is quite high.</p>
+<p><strong>RMSE</strong>: 7.449<br />
+Our model’s predictions for winner_points_won were off by an average of 7.5</p>
+<p><strong>RMSE/mean</strong>: 0.089<br />
+Our prediction error rate is very close to 0, which indicates that the model is quite accurate at predicting the test data.</p>
 </div>
 <div id="extra-data" class="section level2">
 <h2>Extra Data</h2>
@@ -1678,16 +1689,79 @@ include(&quot;tidyverse&quot;)
 include(&quot;knitr&quot;)
 purl(&quot;deliverable2.Rmd&quot;, output = &quot;part2.r&quot;)
 source(&quot;part2.r&quot;)</code></pre>
+<p>Let’s add the court surfaces to our table.</p>
+<pre class="r"><code>ratios$surface &lt;- &quot;&quot;
+
+for(tournament in hard_tournaments){
+  ratios$surface[ratios$tourney_slug == tournament] &lt;- &quot;hard&quot;
+}
+
+for(tournament in clay_tournaments){
+  ratios$surface[ratios$tourney_slug == tournament] &lt;- &quot;clay&quot;
+}
+
+for(tournament in grass_tournaments){
+  ratios$surface[ratios$tourney_slug == tournament] &lt;- &quot;grass&quot;
+}</code></pre>
+<p>Right now the surface data is encoded as a string by default, let’s factorize it to make it more fit for the model.</p>
+<pre class="r"><code>ratios$surface &lt;- as.factor(ratios$surface)
+head(ratios)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["tourney_slug"],"name":[1],"type":["chr"],"align":["left"]},{"label":["match_id"],"name":[2],"type":["chr"],"align":["left"]},{"label":["winner_total_points_won"],"name":[3],"type":["int"],"align":["right"]},{"label":["winner_seed"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["winner_service_point_ratio"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["winner_break_point_ratio"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["winner_return_point_ratio"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["winner_total_point_ratio"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["loser_seed"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["loser_service_point_ratio"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["loser_break_point_ratio"],"name":[11],"type":["dbl"],"align":["right"]},{"label":["loser_return_point_ratio"],"name":[12],"type":["dbl"],"align":["right"]},{"label":["loser_total_point_ratio"],"name":[13],"type":["dbl"],"align":["right"]},{"label":["match_duration"],"name":[14],"type":["int"],"align":["right"]},{"label":["higher_seed_won"],"name":[15],"type":["lgl"],"align":["right"]},{"label":["surface"],"name":[16],"type":["fctr"],"align":["left"]}],"data":[{"1":"brisbane","2":"2017-339-d875-n552","3":"77","4":"7","5":"0.6883117","6":"0.600","7":"0.3478261","8":"0.5273973","9":"3","10":"0.6521739","11":"0.2857143","12":"0.3116883","13":"0.4726027","14":"109","15":"FALSE","16":"hard"},{"1":"brisbane","2":"2017-339-d875-r975","3":"66","4":"7","5":"0.7758621","6":"0.500","7":"0.3442623","8":"0.5546218","9":"1","10":"0.6557377","11":"0.0000000","12":"0.2241379","13":"0.4453782","14":"88","15":"FALSE","16":"hard"},{"1":"brisbane","2":"2017-339-n552-w367","3":"75","4":"3","5":"0.6623377","6":"1.000","7":"0.3934426","8":"0.5434783","9":"2","10":"0.6065574","11":"0.2000000","12":"0.3376623","13":"0.4565217","14":"102","15":"FALSE","16":"hard"},{"1":"brisbane","2":"2017-339-r975-n409","3":"97","4":"1","5":"0.6804124","6":"0.500","7":"0.3690476","8":"0.5359116","9":"5","10":"0.6309524","11":"0.1428571","12":"0.3195876","13":"0.4640884","14":"141","15":"TRUE","16":"hard"},{"1":"brisbane","2":"2017-339-w367-e831","3":"109","4":"2","5":"0.6302521","6":"0.400","7":"0.3505155","8":"0.5046296","9":"34","10":"0.6494845","11":"0.1538462","12":"0.3697479","13":"0.4953704","14":"156","15":"TRUE","16":"hard"},{"1":"brisbane","2":"2017-339-n552-tc61","3":"55","4":"3","5":"0.8235294","6":"0.625","7":"0.5744681","8":"0.6790123","9":"34","10":"0.4255319","11":"0.0000000","12":"0.1764706","13":"0.3209877","14":"62","15":"TRUE","16":"hard"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
-<div id="cross-validation" class="section level2">
-<h2>Cross-Validation</h2>
-<p>We used cross-validation on our model in Part 2, but here are the relevant values.</p>
-<p><strong>R2</strong>: 0.915<br />
-Roughly 91.5% of the variability in our test data can be explained by our model, which is quite high.</p>
-<p><strong>RMSE</strong>: 7.449<br />
-Our model’s predictions for winner_points_won were off by an average of 7.5</p>
-<p><strong>RMSE/mean</strong>: 0.089<br />
-Our prediction error rate is very close to 0, which indicates that the model is quite accurate at predicting the test data.</p>
+<p>Now that we’ve properly added the surface data to our table, let’s go through the model building process again and see if surface is a good predictor.</p>
+<pre class="r"><code>train &lt;- ratios[sample_selection, ]
+test &lt;- ratios[-sample_selection, ]
+train_model &lt;- lm(winner_total_points_won ~ winner_seed + winner_service_point_ratio + winner_break_point_ratio + winner_return_point_ratio + loser_seed + loser_break_point_ratio + match_duration + surface, data=train)
+summary(train_model)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = winner_total_points_won ~ winner_seed + winner_service_point_ratio + 
+##     winner_break_point_ratio + winner_return_point_ratio + loser_seed + 
+##     loser_break_point_ratio + match_duration + surface, data = train)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -87.315  -4.239   0.135   4.184  45.530 
+## 
+## Coefficients:
+##                              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                -22.084067   2.878560  -7.672 2.66e-14 ***
+## winner_seed                  0.129596   0.015187   8.534  &lt; 2e-16 ***
+## winner_service_point_ratio  32.666580   2.726323  11.982  &lt; 2e-16 ***
+## winner_break_point_ratio    -3.638084   0.811632  -4.482 7.81e-06 ***
+## winner_return_point_ratio   21.816615   2.556928   8.532  &lt; 2e-16 ***
+## loser_seed                   0.151615   0.014770  10.265  &lt; 2e-16 ***
+## loser_break_point_ratio     -1.502679   0.618435  -2.430   0.0152 *  
+## match_duration               0.665538   0.005458 121.931  &lt; 2e-16 ***
+## surfacegrass                 7.746081   0.558431  13.871  &lt; 2e-16 ***
+## surfacehard                  3.144531   0.367256   8.562  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 7.229 on 1948 degrees of freedom
+## Multiple R-squared:  0.9187, Adjusted R-squared:  0.9184 
+## F-statistic:  2447 on 9 and 1948 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>The p-values for surface are less than .05, so it looks like the surface is a statistically significant predictor of winner_total_points_won. Let’s see if we can make sense of the values.</p>
+<p>Because surface is a categorical variable, the estimate values are relative to the default level, which in this case is clay. This means that when compared to clay courts, the winner has to win more points to win the overall match on hard and grass courts, over doubly so for grass. This seems to indicate that matches played on grass courts tend to be closer than hard, with both being closer than clay.</p>
+<p>A possible explanation for grass having the closest matches is that grass courts favor big serves much more than other courts. This means that players tend to win their service games even more decisively than normal, leading to long matches that usually go to tiebreaks.</p>
+<p>The majority of tournaments are played on hard court, so most players are most familiar with that surface. Hard courts are essentially the middle ground between grass and clay in terms of court conditions, so it makes sense that it is the middle ground for our model.</p>
+<p>Clay is a very polarizing surface. In contrast to hard, many players either excel at playing on clay or play much worse on clay than on the other surfaces. This would lead to more blowout matches where the winner didn’t need as many points.</p>
+</div>
+<div id="testing-the-new-model" class="section level2">
+<h2>Testing the New Model</h2>
+<pre class="r"><code>predictions &lt;- train_model %&gt;% predict(test)
+R2(predictions, test$winner_total_points_won)</code></pre>
+<pre><code>## [1] 0.9230549</code></pre>
+<p>Our new model explains slightly more of the variability in our test data than our old model, going from 91.5% to 92.3%, which means that adding the surface data was an improvement.</p>
+<pre class="r"><code>RMSE(predictions, test$winner_total_points_won)</code></pre>
+<pre><code>## [1] 7.073308</code></pre>
+<p>Our RMSE value has improved as well. The model’s average error is down to 7.1 from 7.4, meaning that our model’s predictions are more accurate.</p>
+<pre class="r"><code>RMSE(predictions, test$winner_total_points_won)/mean(test$winner_total_points_won)</code></pre>
+<pre><code>## [1] 0.08472276</code></pre>
+<p>Our prediction error rate is also down to 0.084 from 0.089. All of our metrics support that the surface type is a statistically significant predictor of winner_total_points_won.</p>
 </div>
 <div id="operationalization-or-lack-thereof" class="section level2">
 <h2>Operationalization (or lack thereof)</h2>
